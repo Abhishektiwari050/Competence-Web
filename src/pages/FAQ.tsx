@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Search, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import bannerFaq from "@/assets/banner-faq.jpg";
 
 const FAQ = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,16 +120,21 @@ const FAQ = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+      <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bannerFaq} alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-primary/80" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <Badge className="mb-6 bg-accent hover:bg-accent/90 text-accent-foreground">
               FAQ
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Frequently Asked Questions
             </h1>
-            <p className="text-xl text-primary-foreground/90 mb-8">
+            <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8">
               Find answers to common questions about our services, Alibaba, and export processes
             </p>
             

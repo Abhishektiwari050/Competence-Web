@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import bannerContact from "@/assets/banner-contact.jpg";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -37,16 +38,21 @@ const Contact = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+      <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bannerContact} alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-primary/80" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <Badge className="mb-6 bg-accent hover:bg-accent/90 text-accent-foreground">
               Contact Us
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Let's Start Your Global Journey
             </h1>
-            <p className="text-xl text-primary-foreground/90">
+            <p className="text-xl md:text-2xl text-primary-foreground/90">
               Get in touch with our team of export experts today
             </p>
           </div>

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Quote, Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import bannerTestimonials from "@/assets/banner-testimonials.jpg";
 
 const Testimonials = () => {
   const testimonials = [
@@ -92,16 +93,21 @@ const Testimonials = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+      <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bannerTestimonials} alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-primary/80" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <Badge className="mb-6 bg-accent hover:bg-accent/90 text-accent-foreground">
               Client Testimonials
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Success Stories from Our Clients
             </h1>
-            <p className="text-xl text-primary-foreground/90">
+            <p className="text-xl md:text-2xl text-primary-foreground/90">
               Read what businesses across India say about their journey to global markets with us
             </p>
           </div>
@@ -113,11 +119,11 @@ const Testimonials = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">500+</div>
+              <div className="text-4xl font-bold text-accent mb-2">950+</div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">95%</div>
+              <div className="text-4xl font-bold text-primary mb-2">100%</div>
               <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
             </div>
             <div>
