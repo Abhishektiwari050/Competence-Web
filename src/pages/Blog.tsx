@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import blogDocumentation from "@/assets/blog-documentation.jpg";
+import blogAlibaba from "@/assets/blog-alibaba.jpg";
+import blogExportProducts from "@/assets/blog-export-products.jpg";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -25,7 +28,7 @@ const Blog = () => {
       author: "Competence Team",
       date: "2024-01-15",
       readTime: "8 min read",
-      image: "/placeholder.svg",
+      image: blogExportProducts,
     },
     {
       id: 2,
@@ -35,7 +38,7 @@ const Blog = () => {
       author: "Expert Team",
       date: "2024-01-10",
       readTime: "6 min read",
-      image: "/placeholder.svg",
+      image: blogAlibaba,
     },
     {
       id: 3,
@@ -45,7 +48,7 @@ const Blog = () => {
       author: "Market Research Team",
       date: "2024-01-05",
       readTime: "10 min read",
-      image: "/placeholder.svg",
+      image: blogExportProducts,
     },
     {
       id: 4,
@@ -55,7 +58,7 @@ const Blog = () => {
       author: "Compliance Team",
       date: "2024-01-01",
       readTime: "7 min read",
-      image: "/placeholder.svg",
+      image: blogDocumentation,
     },
     {
       id: 5,
@@ -65,7 +68,7 @@ const Blog = () => {
       author: "Success Stories",
       date: "2023-12-28",
       readTime: "5 min read",
-      image: "/placeholder.svg",
+      image: blogExportProducts,
     },
     {
       id: 6,
@@ -75,7 +78,7 @@ const Blog = () => {
       author: "Digital Team",
       date: "2023-12-20",
       readTime: "9 min read",
-      image: "/placeholder.svg",
+      image: blogAlibaba,
     },
   ];
 

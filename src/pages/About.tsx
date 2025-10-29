@@ -8,10 +8,10 @@ import heroImage from "@/assets/hero-global-trade.jpg";
 
 const About = () => {
   const offices = [
-    { city: "Delhi NCR", region: "North India" },
-    { city: "Jaipur", region: "Rajasthan" },
-    { city: "Surat", region: "Gujarat" },
-    { city: "Mumbai", region: "Maharashtra" },
+    { state: "Delhi NCR", description: "National Capital Region" },
+    { state: "Rajasthan", description: "Heritage & Textiles Hub" },
+    { state: "Gujarat", description: "Industrial Powerhouse" },
+    { state: "Uttar Pradesh", description: "Manufacturing Center" },
   ];
 
   const milestones = [
@@ -193,8 +193,8 @@ const About = () => {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <CardContent className="pt-8 pb-8">
-                    <h3 className="font-bold text-primary text-xl mb-2">{office.city}</h3>
-                    <p className="text-sm text-muted-foreground">{office.region}</p>
+                    <h3 className="font-bold text-primary text-xl mb-2">{office.state}</h3>
+                    <p className="text-sm text-muted-foreground">{office.description}</p>
                   </CardContent>
                 </Card>
               ))}
