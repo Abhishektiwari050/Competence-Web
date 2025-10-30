@@ -5,7 +5,18 @@ import { ArrowRight, CheckCircle, Globe, TrendingUp, Target, Shield, Star, Zap }
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import LeadCapturePopup from "@/components/LeadCapturePopup";
-import heroImage from "@/assets/hero-global-trade.jpg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import heroGlobalTrade from "@/assets/hero-global-trade.jpg";
+import heroPartnership from "@/assets/hero-partnership.jpg";
+import heroLogistics from "@/assets/hero-logistics.jpg";
+import heroProducts from "@/assets/hero-products.jpg";
 import alibabaImage from "@/assets/alibaba-consulting.jpg";
 import exportImage from "@/assets/export-consulting.jpg";
 
@@ -15,6 +26,29 @@ const Home = () => {
   const handleLeadSubmit = (data: { name: string; email: string; phone: string }) => {
     console.log("Lead captured:", data);
   };
+
+  const heroSlides = [
+    {
+      image: heroGlobalTrade,
+      title: "Transform Your Business with Expert E-Commerce Consulting",
+      description: "Join 950+ successful businesses who trust us to expand their reach on global platforms like Alibaba. 100% satisfaction guaranteed.",
+    },
+    {
+      image: heroPartnership,
+      title: "Your Trusted Partner in Global Trade",
+      description: "Official Alibaba channel partner helping Indian businesses reach international markets with confidence.",
+    },
+    {
+      image: heroLogistics,
+      title: "Seamless Export Solutions",
+      description: "Complete support from documentation to delivery. We handle the complexity so you can focus on growth.",
+    },
+    {
+      image: heroProducts,
+      title: "Showcase Your Products Globally",
+      description: "Get your products in front of millions of buyers worldwide with optimized listings and strategic marketing.",
+    },
+  ];
 
   const services = [
     {
@@ -73,45 +107,68 @@ const Home = () => {
 
   return (
     <div className="min-h-screen overflow-hidden">
-      {/* Simplified Hero Section with calming image */}
-      <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-primary/95 via-primary/90 to-primary/95 text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={heroImage} 
-            alt="Global Trade" 
-            className="w-full h-full object-cover opacity-30"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/70 to-transparent" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl">
-            <Badge className="mb-6 bg-accent hover:bg-accent text-accent-foreground text-sm px-4 py-2 animate-fade-in-up">
-              India's Trusted Alibaba Channel Partner
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight animate-fade-in-up animation-delay-200">
-              Transform Your Business with Expert E-Commerce Consulting
-            </h1>
-            <p className="text-lg md:text-xl lg:text-2xl mb-8 text-primary-foreground/90 max-w-2xl animate-fade-in-up animation-delay-400">
-              Join 950+ successful businesses who trust us to expand their reach on global platforms like Alibaba. 100% satisfaction guaranteed.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
-              <Button
-                onClick={() => setIsLeadPopupOpen(true)}
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 text-base hover-lift shadow-xl"
-              >
-                Get Free Export Guidance
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-2 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm hover-lift">
-                <Link to="/services">
-                  Explore Our Services
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Hero Carousel Section */}
+      <section className="relative min-h-[85vh]">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="w-full h-full"
+        >
+          <CarouselContent>
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <div className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-primary/95 via-primary/90 to-primary/95 text-primary-foreground overflow-hidden">
+                  <div className="absolute inset-0">
+                    <img 
+                      src={slide.image} 
+                      alt="" 
+                      className="w-full h-full object-cover opacity-30"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/70 to-transparent" />
+                  
+                  <div className="container mx-auto px-4 relative z-10">
+                    <div className="max-w-4xl">
+                      <Badge className="mb-6 bg-accent hover:bg-accent text-accent-foreground text-sm px-4 py-2 animate-fade-in-up">
+                        India's Trusted Alibaba Channel Partner
+                      </Badge>
+                      <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight animate-fade-in-up animation-delay-200">
+                        {slide.title}
+                      </h1>
+                      <p className="text-lg md:text-xl lg:text-2xl mb-8 text-primary-foreground/90 max-w-2xl animate-fade-in-up animation-delay-400">
+                        {slide.description}
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
+                        <Button
+                          onClick={() => setIsLeadPopupOpen(true)}
+                          size="lg"
+                          className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 text-base hover-lift shadow-xl"
+                        >
+                          Get Free Export Guidance
+                          <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                        <Button asChild size="lg" variant="outline" className="border-2 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm hover-lift">
+                          <Link to="/services">
+                            Explore Our Services
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-4 bg-background/80 hover:bg-background" />
+          <CarouselNext className="right-4 bg-background/80 hover:bg-background" />
+        </Carousel>
       </section>
 
       {/* Trust Bar */}

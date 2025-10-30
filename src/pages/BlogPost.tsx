@@ -768,6 +768,65 @@ Proper documentation is the backbone of successful export operations. While the 
   const teaserContent = contentParagraphs.slice(0, teaserLength).join('\n\n');
   const fullContent = post.content;
 
+  // Simple content renderer - converts markdown-style formatting to HTML
+  const renderContent = (content: string) => {
+    return content.split('\n\n').map((paragraph, index) => {
+      // Skip empty paragraphs
+      if (!paragraph.trim()) return null;
+
+      // Headers (## Header)
+      if (paragraph.startsWith('## ')) {
+        const text = paragraph.replace(/^## /, '');
+        return (
+          <h2 key={index} className="text-2xl font-bold text-primary mt-8 mb-4">
+            {text}
+          </h2>
+        );
+      }
+
+      // Subheaders (### Subheader)
+      if (paragraph.startsWith('### ')) {
+        const text = paragraph.replace(/^### /, '');
+        return (
+          <h3 key={index} className="text-xl font-semibold text-foreground mt-6 mb-3">
+            {text}
+          </h3>
+        );
+      }
+
+      // Lists (lines starting with -)
+      if (paragraph.includes('\n- ') || paragraph.startsWith('- ')) {
+        const items = paragraph.split('\n').filter(line => line.trim().startsWith('- '));
+        return (
+          <ul key={index} className="list-disc pl-6 space-y-2">
+            {items.map((item, i) => (
+              <li key={i}>{item.replace(/^- /, '')}</li>
+            ))}
+          </ul>
+        );
+      }
+
+      // Numbered lists (lines starting with numbers)
+      if (/^\d+\./.test(paragraph)) {
+        const items = paragraph.split('\n').filter(line => /^\d+\./.test(line.trim()));
+        return (
+          <ol key={index} className="list-decimal pl-6 space-y-2">
+            {items.map((item, i) => (
+              <li key={i}>{item.replace(/^\d+\.\s*/, '')}</li>
+            ))}
+          </ol>
+        );
+      }
+
+      // Regular paragraphs
+      return (
+        <p key={index} className="leading-relaxed">
+          {paragraph}
+        </p>
+      );
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -826,8 +885,8 @@ Proper documentation is the backbone of successful export operations. While the 
 
             {/* Content */}
             <div className="prose prose-lg max-w-none animate-fade-in-up animation-delay-200">
-              <div className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                {isContentUnlocked ? fullContent : teaserContent}
+              <div className="text-muted-foreground leading-relaxed space-y-4">
+                {renderContent(isContentUnlocked ? fullContent : teaserContent)}
               </div>
 
               {/* Lock Overlay */}
