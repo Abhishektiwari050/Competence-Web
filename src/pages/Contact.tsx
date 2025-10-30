@@ -72,8 +72,8 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Call us for immediate assistance</p>
-                  <a href="tel:+919876543210" className="text-lg font-semibold text-primary hover:text-accent transition-colors block mt-2">
-                    +91 98765 43210
+                  <a href="tel:+919257061439" className="text-lg font-semibold text-primary hover:text-accent transition-colors block mt-2">
+                    +91 92570 61439
                   </a>
                 </CardContent>
               </Card>

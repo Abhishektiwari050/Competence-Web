@@ -164,9 +164,9 @@ const Blog = () => {
                       <span>{post.readTime}</span>
                     </div>
                   </div>
-                  <Button asChild variant="link" className="p-0 mt-4 text-accent self-start">
+                  <Button asChild className="mt-4 bg-accent hover:bg-accent/90 w-full">
                     <Link to={`/blog/${post.id}`}>
-                      Read More <ArrowRight className="ml-2 h-4 w-4" />
+                      Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </CardContent>

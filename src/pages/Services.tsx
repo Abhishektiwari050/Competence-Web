@@ -4,15 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Globe, TrendingUp, Users, Target, CheckCircle, ArrowRight, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import BlogPostModal from "@/components/BlogPostModal";
 import blogDocumentation from "@/assets/blog-documentation.jpg";
 import blogAlibaba from "@/assets/blog-alibaba.jpg";
 import blogExportProducts from "@/assets/blog-export-products.jpg";
 
 const Services = () => {
-  const [selectedPost, setSelectedPost] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const alibabaFeatures = [
     "Supplier account setup and verification",
     "Product listing optimization",
@@ -42,7 +38,7 @@ const Services = () => {
 
   const blogPosts = [
     {
-      id: 1,
+      id: "1",
       title: "Complete Guide to Exporting from India: Step-by-Step Process",
       excerpt: "Learn everything you need to know about starting your export business from India, including documentation, compliance, and best practices.",
       content: `Starting an export business from India requires careful planning and understanding of various regulations. In this comprehensive guide, we'll walk you through every step of the export process.
@@ -65,7 +61,7 @@ Finally, logistics and shipping arrangements require attention to detail. Choose
       image: blogExportProducts,
     },
     {
-      id: 2,
+      id: "2",
       title: "How to Become an Alibaba Verified Supplier: Requirements & Benefits",
       excerpt: "Discover the process of becoming a verified supplier on Alibaba.com and unlock access to millions of global buyers.",
       content: `Becoming a verified supplier on Alibaba.com can significantly boost your export business by connecting you with millions of potential buyers worldwide.
@@ -88,7 +84,7 @@ The benefits of being a verified supplier are substantial: increased credibility
       image: blogAlibaba,
     },
     {
-      id: 3,
+      id: "3",
       title: "Export Documentation Checklist: Essential Papers You Need",
       excerpt: "A comprehensive checklist of all the documents required for successful export operations from India.",
       content: `Export documentation can seem overwhelming, but having a proper checklist ensures smooth operations and compliance with international trade regulations.
@@ -115,11 +111,6 @@ GST documentation and other tax-related papers need to be in order for claiming 
       image: blogDocumentation,
     },
   ];
-
-  const handleViewPost = (post: any) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
 
   return (
     <div className="min-h-screen">
@@ -269,11 +260,13 @@ GST documentation and other tax-related papers need to be in order for claiming 
                       {post.excerpt}
                     </CardDescription>
                     <Button 
-                      onClick={() => handleViewPost(post)}
+                      asChild
                       variant="link" 
                       className="p-0 text-accent"
                     >
-                      Read Full Guide <ArrowRight className="ml-2 h-4 w-4" />
+                      <Link to={`/blog/${post.id}`}>
+                        Read Full Guide <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>
@@ -358,14 +351,6 @@ GST documentation and other tax-related papers need to be in order for claiming 
         </div>
       </section>
 
-      <BlogPostModal
-        post={selectedPost}
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedPost(null);
-        }}
-      />
     </div>
   );
 };

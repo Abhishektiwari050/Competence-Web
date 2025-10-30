@@ -90,9 +90,9 @@ const Footer = () => {
                 <span>Delhi NCR, India<br />Pan-India Presence</span>
               </li>
               <li>
-                <a href="tel:+919876543210" className="flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="tel:+919257061439" className="flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-accent transition-colors">
                   <Phone className="h-4 w-4" />
-                  +91 98765 43210
+                  +91 92570 61439
                 </a>
               </li>
               <li>

@@ -63,7 +63,7 @@ const Header = () => {
               </Link>
             ))}
             <Button asChild variant="default" size="sm" className="bg-accent hover:bg-accent/90">
-              <a href="tel:+919876543210" className="flex items-center gap-2">
+              <a href="tel:+919257061439" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 Call Us
               </a>
@@ -98,7 +98,7 @@ const Header = () => {
                 </Link>
               ))}
               <Button asChild variant="default" size="sm" className="bg-accent hover:bg-accent/90 w-full">
-                <a href="tel:+919876543210" className="flex items-center justify-center gap-2">
+                <a href="tel:+919257061439" className="flex items-center justify-center gap-2">
                   <Phone className="h-4 w-4" />
                   Call Us
                 </a>
