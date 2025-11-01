@@ -39,10 +39,12 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/contact" element={<Contact />} />
-              {/* Admin route only available in development or when explicitly enabled */}
-              {(import.meta.env.DEV || import.meta.env.VITE_ENABLE_ADMIN === 'true') && (
-                <Route path="/admin" element={<Admin />} />
-              )}
+              {/* Admin route - redirects to NotFound in production unless explicitly enabled */}
+              <Route path="/admin" element={
+                (import.meta.env.DEV || import.meta.env.VITE_ENABLE_ADMIN === 'true') 
+                  ? <Admin /> 
+                  : <NotFound />
+              } />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
