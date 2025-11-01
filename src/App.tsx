@@ -39,7 +39,10 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/admin" element={<Admin />} />
+              {/* Admin route only available in development or when explicitly enabled */}
+              {(import.meta.env.DEV || import.meta.env.VITE_ENABLE_ADMIN === 'true') && (
+                <Route path="/admin" element={<Admin />} />
+              )}
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
