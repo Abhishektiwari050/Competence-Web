@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import bannerContact from "@/assets/banner-contact.jpg";
 
 const Contact = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,6 +30,16 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
 
     // Simulate form submission
@@ -38,9 +56,9 @@ const Contact = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={bannerContact} alt="" className="w-full h-full object-cover" />
+          <img src={bannerContact} alt="Contact banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
         
@@ -60,7 +78,7 @@ const Contact = () => {
       </section>
 
       {/* Contact Information & Form */}
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Information */}
@@ -102,7 +120,7 @@ const Contact = () => {
                     Delhi NCR, India
                   </p>
                   <p className="text-sm text-muted-foreground mt-4">
-                    Regional offices in Jaipur, Surat, Mumbai, and other major cities
+                    Regional offices in Jaipur, Surat, Muradabad, and other major cities
                   </p>
                 </CardContent>
               </Card>
@@ -113,10 +131,8 @@ const Contact = () => {
                   <CardTitle>Business Hours</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground mb-2">Monday - Friday</p>
-                  <p className="font-semibold text-primary">9:00 AM - 6:00 PM IST</p>
-                  <p className="text-muted-foreground mt-4 mb-2">Saturday</p>
-                  <p className="font-semibold text-primary">10:00 AM - 4:00 PM IST</p>
+                  <p className="text-muted-foreground mb-2">Monday - Saturday</p>
+                  <p className="font-semibold text-primary">10:00 AM - 6:30 PM IST</p>
                 </CardContent>
               </Card>
             </div>
@@ -149,7 +165,7 @@ const Contact = () => {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="your.email@company.com"
+                          placeholder="your.email@_.com"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           required
@@ -163,7 +179,7 @@ const Contact = () => {
                         <Input
                           id="phone"
                           type="tel"
-                          placeholder="98765 43210"
+                          placeholder="9999999999"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           required
@@ -190,13 +206,14 @@ const Contact = () => {
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         required
+                        className="min-h-[120px]"
                       />
                     </div>
 
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full bg-accent hover:bg-accent/90"
+                      className="w-full bg-accent hover:bg-accent/90 min-h-[48px] hover-lift"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Sending..." : "Send Message"}
@@ -209,23 +226,122 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Map Section (Placeholder) */}
-      <section className="bg-secondary py-16">
+      {/* Office Locations with Tabbed Map */}
+      <section className="bg-secondary py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-primary mb-4">Visit Our Office</h2>
-            <p className="text-muted-foreground">
-              Schedule an appointment to meet our team in person
-            </p>
+            <h2 className="text-3xl font-bold text-primary mb-2">Visit Our Offices</h2>
+            <p className="text-muted-foreground">Select a location to view on map</p>
           </div>
-          <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="h-16 w-16 text-accent mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                Google Maps integration can be added here
-              </p>
-            </div>
-          </div>
+          
+          <Tabs defaultValue="delhi" className="max-w-6xl mx-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
+              <TabsTrigger value="delhi">Delhi NCR</TabsTrigger>
+              <TabsTrigger value="moradabad">Moradabad</TabsTrigger>
+              <TabsTrigger value="jaipur">Jaipur</TabsTrigger>
+              <TabsTrigger value="surat">Surat</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="delhi" className="space-y-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <div>
+                      <h3 className="font-bold text-lg">Delhi NCR - Headquarters</h3>
+                      <p className="text-sm text-muted-foreground">Alibaba Delhi Office</p>
+                    </div>
+                  </div>
+                  <div className="h-[400px] rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.5!2d77.0961588!3d28.6353172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05528b424f3b%3A0xa06446c32fe43280!2sAlibaba%20Delhi%20Office!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title="Delhi Office Map"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="moradabad" className="space-y-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <div>
+                      <h3 className="font-bold text-lg">Moradabad Office</h3>
+                      <p className="text-sm text-muted-foreground">Moradabad, Uttar Pradesh, India</p>
+                    </div>
+                  </div>
+                  <div className="h-[400px] rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.5!2d78.7832882!3d28.8217543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDQ5JzE4LjMiTiA3OMKwNDYnNTkuOCJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title="Moradabad Office Map"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="jaipur" className="space-y-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <div>
+                      <h3 className="font-bold text-lg">Jaipur Office</h3>
+                      <p className="text-sm text-muted-foreground">Jaipur, Rajasthan, India</p>
+                    </div>
+                  </div>
+                  <div className="h-[400px] rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.5!2d75.8043363!3d26.9151752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDU0JzU0LjYiTiA3NcKwNDgnMTUuNiJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title="Jaipur Office Map"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="surat" className="space-y-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <div>
+                      <h3 className="font-bold text-lg">Surat Office</h3>
+                      <p className="text-sm text-muted-foreground">Alibaba Surat Office, International Trade Centre</p>
+                    </div>
+                  </div>
+                  <div className="h-[400px] rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.5!2d72.8191443!3d21.1812786!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04feed9f1a247%3A0xcd7f29e91c2952be!2sAlibaba%20Surat%20office!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title="Surat Office Map"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
     </div>

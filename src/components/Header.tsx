@@ -32,11 +32,18 @@ const Header = () => {
   ];
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md shadow-md" : "bg-background"
-      }`}
-    >
+    <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded"
+      >
+        Skip to main content
+      </a>
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          isScrolled ? "bg-background/95 backdrop-blur-md shadow-md" : "bg-background"
+        }`}
+      >
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
@@ -73,8 +80,9 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 text-foreground hover:text-accent transition-colors"
-            aria-label="Toggle menu"
+            className="lg:hidden p-2 text-foreground hover:text-accent transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -88,7 +96,7 @@ const Header = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-sm font-medium transition-colors hover:text-accent px-2 py-2 ${
+                  className={`text-sm font-medium transition-colors hover:text-accent px-2 py-3 min-h-[48px] flex items-center ${
                     location.pathname === link.path
                       ? "text-accent font-semibold bg-secondary/50 rounded"
                       : "text-foreground"
@@ -108,6 +116,7 @@ const Header = () => {
         )}
       </div>
     </header>
+    </>
   );
 };
 

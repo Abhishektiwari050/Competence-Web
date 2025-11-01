@@ -95,7 +95,7 @@ const Testimonials = () => {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={bannerTestimonials} alt="" className="w-full h-full object-cover" />
+          <img src={bannerTestimonials} alt="Testimonials banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
         
@@ -119,19 +119,19 @@ const Testimonials = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-4xl font-bold text-accent mb-2">950+</div>
+              <div className="text-4xl font-bold text-accent mb-2">750+</div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">100%</div>
+              <div className="text-4xl font-bold text-primary mb-2">90%</div>
               <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">50+</div>
+              <div className="text-4xl font-bold text-primary mb-2">200+</div>
               <div className="text-sm text-muted-foreground">Countries Reached</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">10+</div>
+              <div className="text-4xl font-bold text-primary mb-2">12+</div>
               <div className="text-sm text-muted-foreground">Years Experience</div>
             </div>
           </div>
@@ -143,7 +143,7 @@ const Testimonials = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow flex flex-col">
+              <Card key={index} className="hover:shadow-lg transition-shadow flex flex-col h-full">
                 <CardHeader>
                   <div className="flex items-start gap-4 mb-4">
                     <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
@@ -183,8 +183,12 @@ const Testimonials = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow animation-delay-400" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Write Your Success Story?
           </h2>
@@ -192,12 +196,12 @@ const Testimonials = () => {
             Join hundreds of successful businesses that have transformed their export operations with our expert guidance.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground hover-lift shadow-xl">
               <Link to="/contact">
                 Get Started Today <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+            <Button asChild size="lg" variant="outline" className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm">
               <Link to="/services">Learn About Our Services</Link>
             </Button>
           </div>

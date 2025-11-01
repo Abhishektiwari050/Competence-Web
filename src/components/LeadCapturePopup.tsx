@@ -119,7 +119,7 @@ const LeadCapturePopup = ({ isOpen, onClose, onSubmit }: LeadCapturePopupProps) 
             We respect your privacy. Your information will be kept confidential and used only to provide you with relevant export guidance.
           </p>
 
-          <Button type="submit" className="w-full bg-accent hover:bg-accent/90">
+          <Button type="submit" className="w-full bg-accent hover:bg-accent/90 min-h-[48px] hover-lift">
             Unlock Content Now
           </Button>
         </form>

@@ -122,7 +122,7 @@ const FAQ = () => {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={bannerFaq} alt="" className="w-full h-full object-cover" />
+          <img src={bannerFaq} alt="FAQ banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
         
@@ -194,15 +194,19 @@ const FAQ = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-secondary py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
+      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow animation-delay-400" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Still Have Questions?
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
             Our team is here to help. Contact us and we'll provide personalized answers to your specific questions.
           </p>
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground hover-lift shadow-xl">
             <Link to="/contact">
               Contact Us <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

@@ -1,0 +1,10 @@
+{
+  "verified": [
+    {
+      "changeId": "sample-change-001",
+      "file": "docs/sample-placeholder.txt",
+      "type": "addFile"
+    }
+  ],
+  "issues": []
+}

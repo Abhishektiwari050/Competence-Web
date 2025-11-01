@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,90 +10,71 @@ import blogAlibaba from "@/assets/blog-alibaba.jpg";
 import blogExportProducts from "@/assets/blog-export-products.jpg";
 import bannerFaq from "@/assets/banner-faq.jpg";
 
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  image: string;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Blog = () => {
+  const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [adminPosts, setAdminPosts] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Load posts from localStorage (Admin panel)
+  useEffect(() => {
+    const saved = localStorage.getItem("blogPosts");
+    if (saved) {
+      const posts = JSON.parse(saved);
+      setAdminPosts(posts.filter((p: BlogPost) => p.status === "published"));
+    }
+  }, []);
 
   const categories = [
     { id: "all", name: "All Posts" },
-    { id: "export", name: "Export Guides" },
-    { id: "alibaba", name: "Alibaba Tips" },
-    { id: "documentation", name: "Documentation" },
-    { id: "success", name: "Success Stories" },
+    { id: "Alibaba Tips", name: "Alibaba Tips" },
+    { id: "Export Guide", name: "Export Guides" },
+    { id: "Success Stories", name: "Success Stories" },
+    { id: "Industry News", name: "Industry News" },
+    { id: "How-To Guides", name: "How-To Guides" },
   ];
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Complete Guide to Exporting from India: Step-by-Step Process",
-      excerpt: "Learn everything you need to know about starting your export business from India, including documentation, compliance, and best practices.",
-      category: "export",
-      author: "Competence Team",
-      date: "2024-01-15",
-      readTime: "8 min read",
-      image: blogExportProducts,
-    },
-    {
-      id: 2,
-      title: "How to Become an Alibaba Verified Supplier: Requirements & Benefits",
-      excerpt: "Discover the process of becoming a verified supplier on Alibaba.com and unlock access to millions of global buyers.",
-      category: "alibaba",
-      author: "Expert Team",
-      date: "2024-01-10",
-      readTime: "6 min read",
-      image: blogAlibaba,
-    },
-    {
-      id: 3,
-      title: "Top 10 Products to Export from India in 2024",
-      excerpt: "Explore the most profitable product categories for Indian exporters and learn how to tap into global demand.",
-      category: "export",
-      author: "Market Research Team",
-      date: "2024-01-05",
-      readTime: "10 min read",
-      image: blogExportProducts,
-    },
-    {
-      id: 4,
-      title: "Export Documentation Checklist: Essential Papers You Need",
-      excerpt: "A comprehensive checklist of all the documents required for successful export operations from India.",
-      category: "documentation",
-      author: "Compliance Team",
-      date: "2024-01-01",
-      readTime: "7 min read",
-      image: blogDocumentation,
-    },
-    {
-      id: 5,
-      title: "From Local to Global: Success Story of a Textile Exporter",
-      excerpt: "Read how a small textile manufacturer from Surat transformed into a successful global brand with our guidance.",
-      category: "success",
-      author: "Success Stories",
-      date: "2023-12-28",
-      readTime: "5 min read",
-      image: blogExportProducts,
-    },
-    {
-      id: 6,
-      title: "Optimizing Your Alibaba Product Listings for Maximum Visibility",
-      excerpt: "Master the art of creating compelling product listings that rank higher and attract more buyers on Alibaba.",
-      category: "alibaba",
-      author: "Digital Team",
-      date: "2023-12-20",
-      readTime: "9 min read",
-      image: blogAlibaba,
-    },
-  ];
+  // Convert admin posts to display format
+  const allPosts = adminPosts.map(post => ({
+    id: post.id,
+    title: post.title,
+    excerpt: post.content.slice(0, 150) + "...",
+    category: post.category.toLowerCase().replace(/ /g, ""),
+    author: "Competence Team",
+    date: post.createdAt,
+    readTime: Math.ceil(post.content.split(" ").length / 200) + " min read",
+    image: post.image || blogExportProducts,
+  }));
 
   const filteredPosts = selectedCategory === "all"
-    ? blogPosts
-    : blogPosts.filter(post => post.category === selectedCategory);
+    ? allPosts
+    : allPosts.filter(post => {
+        const postCategory = post.category.toLowerCase().replace(/ /g, "");
+        const selectedCat = selectedCategory.toLowerCase().replace(/ /g, "");
+        return postCategory === selectedCat || postCategory.includes(selectedCat) || selectedCat.includes(postCategory);
+      });
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary to-primary/90 text-primary-foreground py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={bannerFaq} alt="" className="w-full h-full object-cover" />
+          <img src={bannerFaq} alt="Blog banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
         
@@ -120,7 +102,7 @@ const Blog = () => {
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category.id)}
-                className={selectedCategory === category.id ? "bg-accent hover:bg-accent/90" : ""}
+                className={`min-h-[48px] ${selectedCategory === category.id ? "bg-accent hover:bg-accent/90" : ""}`}
               >
                 {category.name}
               </Button>
@@ -134,7 +116,7 @@ const Blog = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post) => (
-              <Card key={post.id} className="hover:shadow-lg transition-shadow flex flex-col">
+              <Card key={post.id} className="hover:shadow-lg transition-shadow flex flex-col h-full">
                 <div className="aspect-video bg-muted flex items-center justify-center overflow-hidden">
                   <img
                     src={post.image}
@@ -164,7 +146,7 @@ const Blog = () => {
                       <span>{post.readTime}</span>
                     </div>
                   </div>
-                  <Button asChild className="mt-4 bg-accent hover:bg-accent/90 w-full">
+                  <Button asChild className="mt-4 bg-accent hover:bg-accent/90 w-full min-h-[48px]">
                     <Link to={`/blog/${post.id}`}>
                       Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -177,15 +159,19 @@ const Blog = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse-slow animation-delay-400" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Want to Learn More About Exporting?
           </h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
-            Subscribe to our newsletter for weekly export tips and industry insights delivered to your inbox.
+            Get expert guidance and personalized support for your export journey.
           </p>
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground hover-lift shadow-xl">
             <Link to="/contact">
               Contact Us for Expert Guidance <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

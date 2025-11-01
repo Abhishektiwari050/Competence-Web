@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft, Lock } from "lucide-react";
@@ -8,10 +8,28 @@ import blogDocumentation from "@/assets/blog-documentation.jpg";
 import blogAlibaba from "@/assets/blog-alibaba.jpg";
 import blogExportProducts from "@/assets/blog-export-products.jpg";
 
+interface AdminBlogPost {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  image: string;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+
 const BlogPost = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [isContentUnlocked, setIsContentUnlocked] = useState(false);
   const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
+  const [adminPosts, setAdminPosts] = useState<AdminBlogPost[]>([]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname, id]);
 
   useEffect(() => {
     // Check if content is already unlocked via cookie
@@ -20,6 +38,13 @@ const BlogPost = () => {
       cookie.trim().startsWith('contentUnlocked=true')
     );
     setIsContentUnlocked(hasUnlockedCookie);
+
+    // Load admin posts
+    const saved = localStorage.getItem("blogPosts");
+    if (saved) {
+      const posts = JSON.parse(saved);
+      setAdminPosts(posts.filter((p: AdminBlogPost) => p.status === "published"));
+    }
   }, []);
 
   const blogPosts = [
@@ -739,7 +764,22 @@ Proper documentation is the backbone of successful export operations. While the 
     },
   ];
 
-  const post = blogPosts.find(p => p.id === id);
+  // Check admin posts first, then default posts
+  let post = adminPosts.find(p => p.id === id);
+  
+  if (post) {
+    // Convert admin post to display format
+    post = {
+      ...post,
+      excerpt: post.content.slice(0, 150) + "...",
+      author: "Admin",
+      date: post.createdAt,
+      readTime: Math.ceil(post.content.split(" ").length / 200) + " min read",
+      image: post.image || blogExportProducts,
+    } as any;
+  } else {
+    post = blogPosts.find(p => p.id === id);
+  }
 
   if (!post) {
     return (
@@ -762,9 +802,9 @@ Proper documentation is the backbone of successful export operations. While the 
     setIsContentUnlocked(true);
   };
 
-  // Split content for teaser (show first ~30% for free)
+  // Split content for teaser (show first 50% for free)
   const contentParagraphs = post.content.split('\n\n');
-  const teaserLength = Math.floor(contentParagraphs.length * 0.3);
+  const teaserLength = Math.floor(contentParagraphs.length * 0.5);
   const teaserContent = contentParagraphs.slice(0, teaserLength).join('\n\n');
   const fullContent = post.content;
 

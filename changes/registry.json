@@ -1,0 +1,29 @@
+{
+  "changes": [
+    {
+      "id": "sample-change-001",
+      "description": "Sample placeholder change (docs only) to validate pipeline",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "addFile",
+          "file": "docs/sample-placeholder.txt",
+          "content": "This is a sample file managed by the change pipeline."
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "id": "2025-10-31T06-49-52-966Z",
+      "applied": [
+        {
+          "changeId": "sample-change-001",
+          "file": "docs/sample-placeholder.txt",
+          "action": "addFile"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

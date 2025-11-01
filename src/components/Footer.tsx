@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Facebook, Instagram } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo2.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +12,7 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="Competence Consulting Logo" className="h-12 w-auto brightness-0 invert" />
+              <img src={logo} alt="Competence Consulting Logo" className="h-12" />
             </Link>
             <p className="text-sm text-primary-foreground/80 mb-4">
               India's Trusted Alibaba Channel Partner. Helping businesses go global with expert e-commerce consulting.
