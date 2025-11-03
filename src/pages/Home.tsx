@@ -163,12 +163,14 @@ const Home = () => {
                       </p>
                       <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
                         <Button
-                          onClick={() => setIsLeadPopupOpen(true)}
+                          asChild
                           size="lg"
                           className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 text-base hover-lift shadow-xl"
                         >
-                          Get Free Export Guidance
-                          <ArrowRight className="ml-2 h-5 w-5" />
+                          <Link to="/contact#contact-form">
+                            Get Free Export Guidance
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                          </Link>
                         </Button>
                         <Button asChild size="lg" variant="outline" className="border-2 border-primary-foreground bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30 backdrop-blur-sm hover-lift shadow-lg">
                           <Link to="/services">
@@ -341,7 +343,7 @@ const Home = () => {
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-white px-10 py-6 text-lg hover-lift shadow-xl"
             >
-              <Link to="/contact">Get Free Consultation <ArrowRight className="ml-2 h-6 w-6" /></Link>
+              <Link to="/contact#contact-form">Get Free Consultation <ArrowRight className="ml-2 h-6 w-6" /></Link>
             </Button>
           </div>
         </div>
