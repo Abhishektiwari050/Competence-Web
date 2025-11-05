@@ -42,7 +42,8 @@ const Admin = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
-  const [autoSaveStatus, setAutoSaveStatus] = useState<"saved" | "saving" | "">("");
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"saving" | "saved" | null>(null);
+  const [activeFormats, setActiveFormats] = useState<string[]>([]);
 
   const categories = ["Alibaba Tips", "Export Guide", "Success Stories", "Industry News", "How-To Guides"];
   const availableTags = ["E-commerce", "Export", "Alibaba", "Documentation", "Marketing", "Logistics", "Compliance"];
@@ -62,6 +63,72 @@ const Admin = () => {
 
   // Default blog posts from the website
   const defaultBlogPosts: BlogPost[] = [
+    {
+      id: "1",
+      title: "Complete Guide to Exporting from India: Step-by-Step Process",
+      content: "Learn everything you need to know about starting your export business from India, including documentation, compliance, and best practices.\n\n## Getting Started with Export Business\n\nFirst, you need to obtain an Import Export Code (IEC) from the Directorate General of Foreign Trade (DGFT). This is a mandatory requirement for anyone looking to export from India.",
+      category: "Export Guide",
+      tags: ["Export", "Documentation", "Compliance"],
+      image: "",
+      status: "published",
+      createdAt: "2024-01-15",
+      updatedAt: "2024-01-15",
+    },
+    {
+      id: "2",
+      title: "How to Become an Alibaba Verified Supplier: Requirements & Benefits",
+      content: "Discover the process of becoming a verified supplier on Alibaba.com and unlock access to millions of global buyers.\n\n## Why Become an Alibaba Verified Supplier?\n\nAlibaba.com is the world's largest B2B marketplace, connecting suppliers with buyers from over 190 countries.",
+      category: "Alibaba Tips",
+      tags: ["Alibaba", "E-commerce", "Marketing"],
+      image: "",
+      status: "published",
+      createdAt: "2024-01-10",
+      updatedAt: "2024-01-10",
+    },
+    {
+      id: "3",
+      title: "Top 10 Products to Export from India in 2024",
+      content: "Explore the most profitable product categories for Indian exporters and learn how to tap into global demand.\n\n## High-Demand Export Products\n\nIndia has a diverse range of products that are in high demand globally. Understanding which products have the best export potential can help you make informed business decisions.",
+      category: "Export Guide",
+      tags: ["Export", "Marketing"],
+      image: "",
+      status: "published",
+      createdAt: "2024-01-05",
+      updatedAt: "2024-01-05",
+    },
+    {
+      id: "4",
+      title: "Export Documentation Checklist: Essential Papers You Need",
+      content: "A comprehensive checklist of all the documents required for successful export operations from India.\n\n## Why Documentation Matters\n\nProper documentation is crucial for customs clearance, international payment, legal compliance, and shipment tracking.",
+      category: "Export Guide",
+      tags: ["Documentation", "Compliance", "Export"],
+      image: "",
+      status: "published",
+      createdAt: "2024-01-01",
+      updatedAt: "2024-01-01",
+    },
+    {
+      id: "5",
+      title: "From Local to Global: Success Story of a Textile Exporter",
+      content: "Read how a small textile manufacturer from Surat transformed into a successful global brand with our guidance.\n\n## The Journey Begins\n\nEvery success story starts with a vision. This is the inspiring journey of a textile manufacturer who took the leap into international markets.",
+      category: "Success Stories",
+      tags: ["Export"],
+      image: "",
+      status: "published",
+      createdAt: "2023-12-28",
+      updatedAt: "2023-12-28",
+    },
+    {
+      id: "6",
+      title: "Optimizing Your Alibaba Product Listings for Maximum Visibility",
+      content: "Master the art of creating compelling product listings that rank higher and attract more buyers on Alibaba.\n\n## Product Listing Optimization\n\nYour product listing is your digital storefront on Alibaba. Learn how to optimize it for maximum visibility and conversions.",
+      category: "Alibaba Tips",
+      tags: ["Alibaba", "E-commerce", "Marketing"],
+      image: "",
+      status: "published",
+      createdAt: "2023-12-20",
+      updatedAt: "2023-12-20",
+    },
   ];
 
   // Load posts from localStorage
@@ -190,36 +257,86 @@ const Admin = () => {
     const textarea = document.getElementById("content") as HTMLTextAreaElement;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = currentPost.content.substring(start, end);
-    let formattedText = "";
+    const content = currentPost.content;
 
-    switch (format) {
-      case "bold":
-        formattedText = `**${selectedText}**`;
-        break;
-      case "italic":
-        formattedText = `*${selectedText}*`;
-        break;
-      case "h1":
-        formattedText = `# ${selectedText}`;
-        break;
-      case "h2":
-        formattedText = `## ${selectedText}`;
-        break;
-      case "bullet":
-        formattedText = `- ${selectedText}`;
-        break;
-      case "number":
-        formattedText = `1. ${selectedText}`;
-        break;
+    // For headers, apply to the whole line
+    if (format.startsWith('h')) {
+      let lineStart = start;
+      while (lineStart > 0 && content[lineStart - 1] !== '\n') {
+        lineStart--;
+      }
+      
+      let lineEnd = end;
+      while (lineEnd < content.length && content[lineEnd] !== '\n') {
+        lineEnd++;
+      }
+
+      const line = content.substring(lineStart, lineEnd);
+      const newContent = content.substring(0, lineStart) + `#`.repeat(parseInt(format[1])) + ` ${line.replace(/^[#\s]*/, '')}` + content.substring(lineEnd);
+      setCurrentPost({ ...currentPost, content: newContent });
+
+    } else { // For inline formats like bold/italic
+      const selectedText = content.substring(start, end);
+      let formattedText = "";
+
+      switch (format) {
+        case "bold":
+          formattedText = `**${selectedText}**`;
+          break;
+        case "italic":
+          formattedText = `*${selectedText}*`;
+          break;
+        case "bullet":
+          formattedText = `- ${selectedText}`;
+          break;
+        case "number":
+          formattedText = `1. ${selectedText}`;
+          break;
+      }
+
+      const newContent =
+        content.substring(0, start) +
+        formattedText +
+        content.substring(end);
+
+      setCurrentPost({ ...currentPost, content: newContent });
+    }
+  };
+
+  const handleSelectionChange = () => {
+    const textarea = document.getElementById("content") as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const content = currentPost.content;
+    const formats: string[] = [];
+
+    // Check for bold/italic
+    if (start !== end) {
+      const selectedText = content.substring(start, end);
+      if (selectedText.startsWith('**') && selectedText.endsWith('**')) {
+        formats.push('bold');
+      }
+      if (selectedText.startsWith('*') && selectedText.endsWith('*')) {
+        formats.push('italic');
+      }
     }
 
-    const newContent =
-      currentPost.content.substring(0, start) +
-      formattedText +
-      currentPost.content.substring(end);
+    // Check for headers
+    let lineStart = start;
+    while (lineStart > 0 && content[lineStart - 1] !== '\n') {
+      lineStart--;
+    }
+    const line = content.substring(lineStart, end);
+    if (line.startsWith('# ')) formats.push('h1');
+    if (line.startsWith('## ')) formats.push('h2');
+    if (line.startsWith('### ')) formats.push('h3');
+    if (line.startsWith('#### ')) formats.push('h4');
+    if (line.startsWith('##### ')) formats.push('h5');
+    if (line.startsWith('###### ')) formats.push('h6');
 
-    setCurrentPost({ ...currentPost, content: newContent });
+    setActiveFormats(formats);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,8 +436,7 @@ const Admin = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => applyFormat("bold")}
-                      className="min-h-[44px]"
-                    >
+                      className={`min-h-[44px] ${activeFormats.includes("bold") ? "bg-muted" : ""}`}>
                       <strong>B</strong>
                     </Button>
                     <Button
@@ -328,8 +444,7 @@ const Admin = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => applyFormat("italic")}
-                      className="min-h-[44px]"
-                    >
+                      className={`min-h-[44px] ${activeFormats.includes("italic") ? "bg-muted" : ""}`}>
                       <em>I</em>
                     </Button>
                     <Button
@@ -337,8 +452,7 @@ const Admin = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => applyFormat("h1")}
-                      className="min-h-[44px]"
-                    >
+                      className={`min-h-[44px] ${activeFormats.includes("h1") ? "bg-muted" : ""}`}>
                       H1
                     </Button>
                     <Button
@@ -346,9 +460,40 @@ const Admin = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => applyFormat("h2")}
-                      className="min-h-[44px]"
-                    >
+                      className={`min-h-[44px] ${activeFormats.includes("h2") ? "bg-muted" : ""}`}>
                       H2
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyFormat("h3")}
+                      className={`min-h-[44px] ${activeFormats.includes("h3") ? "bg-muted" : ""}`}>
+                      H3
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyFormat("h4")}
+                      className={`min-h-[44px] ${activeFormats.includes("h4") ? "bg-muted" : ""}`}>
+                      H4
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyFormat("h5")}
+                      className={`min-h-[44px] ${activeFormats.includes("h5") ? "bg-muted" : ""}`}>
+                      H5
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyFormat("h6")}
+                      className={`min-h-[44px] ${activeFormats.includes("h6") ? "bg-muted" : ""}`}>
+                      H6
                     </Button>
                     <Button
                       type="button"
@@ -385,6 +530,7 @@ const Admin = () => {
                     placeholder="Start writing your blog post content here..."
                     value={currentPost.content}
                     onChange={(e) => setCurrentPost({ ...currentPost, content: e.target.value })}
+                    onSelect={handleSelectionChange}
                     className="min-h-[300px] text-base"
                   />
                 </div>
