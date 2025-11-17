@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, Save, Upload, X, Search, Edit, Trash2, CheckCircle, AlertCircle, HelpCircle, Plus, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+import { markdownToHtml } from "../../markdown-parser/src/index";
+
 interface BlogPost {
   id: string;
   title: string;
@@ -354,6 +356,22 @@ const Admin = () => {
     }
   };
 
+  const handleMarkdownUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        setCurrentPost({ ...currentPost, content });
+        toast({
+          title: "✅ Markdown File Uploaded",
+          description: "The file content has been loaded into the editor.",
+        });
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const toggleTag = (tag: string) => {
     const newTags = currentPost.tags.includes(tag)
       ? currentPost.tags.filter(t => t !== tag)
@@ -527,11 +545,35 @@ const Admin = () => {
                   <p className="text-sm text-gray-600 mb-2">Write your blog post here</p>
                   <Textarea
                     id="content"
-                    placeholder="Start writing your blog post content here..."
+                    placeholder="Start writing your blog post here... Use markdown for formatting."
                     value={currentPost.content}
                     onChange={(e) => setCurrentPost({ ...currentPost, content: e.target.value })}
                     onSelect={handleSelectionChange}
                     className="min-h-[300px] text-base"
+                  />
+                </div>
+
+                {/* Preview */}
+                <div>
+                  <Label className="text-base font-semibold">Preview</Label>
+                  <div
+                    className="prose max-w-none p-4 border rounded-md min-h-[200px] bg-gray-50"
+                    dangerouslySetInnerHTML={{ __html: markdownToHtml(currentPost.content) }}
+                  />
+                </div>
+
+                {/* File Upload */}
+                <div>
+                  <Label htmlFor="md-upload" className="text-base font-semibold">
+                    Upload Markdown File
+                  </Label>
+                  <p className="text-sm text-gray-600 mb-2">Alternatively, upload a .md file</p>
+                  <Input
+                    id="md-upload"
+                    type="file"
+                    accept=".md"
+                    onChange={handleMarkdownUpload}
+                    className="min-h-[48px]"
                   />
                 </div>
 
@@ -790,9 +832,10 @@ const Admin = () => {
                   <Badge key={tag} variant="outline">{tag}</Badge>
                 ))}
               </div>
-              <div className="prose max-w-none">
-                <p className="whitespace-pre-wrap text-base leading-relaxed">{currentPost.content}</p>
-              </div>
+              <div
+                className="prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: markdownToHtml(currentPost.content) }}
+              />
             </div>
           </DialogContent>
         </Dialog>

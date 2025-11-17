@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Parser</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #container {
+      display: flex;
+      width: 80%;
+      height: 80%;
+    }
+    textarea, #output {
+      width: 50%;
+      height: 100%;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <textarea id="input"># Hello, World!\n\nThis is a **markdown** parser.\n\n* Item 1\n* Item 2\n\n> A blockquote\n\n```\nconst x = 1;\n```\n</textarea>
+    <div id="output"></div>
+  </div>
+  <script type="module">
+    import { markdownToHtml } from './dist/index.js';
+
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    function update() {
+      output.innerHTML = markdownToHtml(input.value);
+    }
+
+    input.addEventListener('input', update);
+    update();
+  </script>
+</body>
+</html>

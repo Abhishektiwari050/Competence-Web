@@ -73,8 +73,8 @@ const Home = () => {
   const services = [
     {
       icon: Globe,
-      title: "Alibaba Supplier Membership",
-      description: "Get verified on Alibaba.com and reach millions of global buyers with our expert guidance.",
+      title: "Alibaba Gold Supplier Membership",
+      description: "Get Registered on Alibaba.com and reach millions of global buyers with our expert guidance.",
       link: "/services#alibaba",
       image: alibabaImage,
     },
@@ -95,10 +95,10 @@ const Home = () => {
   ];
 
   const whyChooseUs = [
-    { icon: CheckCircle, text: "Official Alibaba Channel Partner", color: "text-accent" },
-    { icon: Globe, text: "Pan-India Presence", color: "text-primary" },
+    { icon: CheckCircle, text: "Authorised Alibaba Channel Partner", color: "text-accent" },
+    { icon: Globe, text: "Global Presence", color: "text-primary" },
     { icon: Shield, text: "Aligned with 'Vocal for Local' Initiative", color: "text-accent" },
-    { icon: Star, text: "750+ Clients with 90% Satisfaction", color: "text-primary" },
+    { icon: Star, text: "Serving over 950 Clients with a 90% Satisfaction rate", color: "text-primary" },
   ];
 
   const testimonials = [
@@ -106,19 +106,19 @@ const Home = () => {
       quote: "Competence Consulting helped us transform from a local manufacturer to a global exporter. Their Alibaba expertise is unmatched!",
       name: "Rajesh Kumar",
       designation: "CEO, Premium Textiles Pvt Ltd",
-      src: "/placeholder.svg",
+      src: "/src/assets/Pre.png",
     },
     {
       quote: "Professional, knowledgeable, and result-oriented. We've seen a 300% increase in international inquiries within 6 months.",
       name: "Priya Sharma",
       designation: "Director, TechElectro Industries",
-      src: "/placeholder.svg",
+      src: "/src/assets/tech.png",
     },
     {
       quote: "The team guided us through every step of the export process. Now we're successfully exporting to 15 countries!",
       name: "Amit Patel",
       designation: "Founder, Handicrafts Exports",
-      src: "/placeholder.svg",
+      src: "/src/assets/hand.png",
     },
   ];
 
@@ -200,12 +200,12 @@ const Home = () => {
               <div className="text-sm md:text-base text-muted-foreground">Years Experience</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">750+</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">950+</div>
               <div className="text-sm md:text-base text-muted-foreground">Happy Clients</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold text-accent mb-2">30+</div>
-              <div className="text-sm md:text-base text-muted-foreground">Cities Covered</div>
+              <div className="text-4xl md:text-5xl font-bold text-accent mb-2">20+</div>
+              <div className="text-sm md:text-base text-muted-foreground">States Covered</div>
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">90%</div>
@@ -336,7 +336,7 @@ const Home = () => {
               Ready to Go Global?
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl mb-10 text-primary/90">
-              Join 750+ successful businesses who trust us with their export journey
+              Join Alibaba To Elevate Your Business and Achieve Success on a Global Scale.
             </p>
             <Button 
               asChild

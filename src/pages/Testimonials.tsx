@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Quote, Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import bannerTestimonials from "@/assets/banner-testimonials.jpg";
+import bannerTestimonials from "@/assets/test.jpeg";
 
 const Testimonials = () => {
   const testimonials = [
@@ -119,7 +119,7 @@ const Testimonials = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-4xl font-bold text-accent mb-2">750+</div>
+              <div className="text-4xl font-bold text-accent mb-2">950+</div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>
             <div>
@@ -201,7 +201,7 @@ const Testimonials = () => {
                 Get Started Today <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm">
+            <Button asChild size="lg" className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm">
               <Link to="/services">Learn About Our Services</Link>
             </Button>
           </div>

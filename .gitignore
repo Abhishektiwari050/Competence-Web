@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+ 
+# Environment variables
+.env
+
+# Local markdown parser build output
+markdown-parser/dist
+markdown-parser/node_modules

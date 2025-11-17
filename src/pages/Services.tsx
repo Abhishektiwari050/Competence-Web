@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, TrendingUp, Users, Target, CheckCircle, ArrowRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import heroServices from "@/assets/hero-global-trade.jpg";
+import heroServices from "@/assets/service.jpeg";
 
 const Services = () => {
   const location = useLocation();
@@ -37,6 +37,8 @@ const Services = () => {
     "Professional product photography guidance",
     "Competitive pricing strategy",
     "RFQ management training",
+    "Minisite Development",
+    "Account Diagnosis",
   ];
 
   const exportFeatures = [
@@ -78,7 +80,7 @@ const Services = () => {
               Our Services
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Comprehensive E-Commerce & Export Solutions
+              Holisitic E-Commerce & Export Solutions
             </h1>
             <p className="text-xl md:text-2xl text-primary-foreground/90">
               End-to-end services to help your business succeed in global markets
@@ -94,7 +96,7 @@ const Services = () => {
             <div className="text-center mb-12 scroll-animate">
               <Globe className="h-16 w-16 text-accent mx-auto mb-6" />
               <h2 className="text-3xl md:text-5xl font-bold text-primary mb-4">
-                Alibaba Supplier Membership
+                Alibaba Global Gold Supplier Membership
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground">
                 Become a verified supplier on the world's largest B2B marketplace

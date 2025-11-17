@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Search, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import bannerFaq from "@/assets/banner-faq.jpg";
+import bannerFaq from "@/assets/faq.jpeg";
 
 const FAQ = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,11 +16,11 @@ const FAQ = () => {
       questions: [
         {
           question: "What is Competence Consulting and what services do you offer?",
-          answer: "Competence Consulting E-Commerce LLP is India's trusted Alibaba channel partner. We offer comprehensive services including Alibaba supplier membership setup, export consulting, digital marketing, brand building, and complete export documentation support to help Indian businesses succeed in international markets.",
+          answer: "Competence Consulting E-Commerce LLP is India's Authorized Alibaba channel partner. We offer comprehensive services including Alibaba supplier membership setup, export consulting, brand building, and complete export documentation support to help Indian businesses succeed in international markets.",
         },
         {
           question: "Who can benefit from your services?",
-          answer: "Our services are perfect for SME business owners, manufacturers, export houses, traders, wholesalers, and anyone looking to export products from India or establish a strong presence on Alibaba.com. Whether you're just starting or looking to expand your existing export business, we can help.",
+          answer: "Our services are perfect for SME business owners, manufacturers, export houses, traders, wholesalers, and anyone looking to export products from India or establish a strong presence in Global markets. Whether you're just starting or looking to expand your existing export business, we can help.",
         },
         {
           question: "How do I get started with Competence Consulting?",
@@ -36,12 +36,12 @@ const FAQ = () => {
           answer: "Alibaba supplier membership gives you access to the world's largest B2B marketplace with millions of global buyers. As a verified supplier, you get enhanced visibility, trust badges, and priority placement in search results. It's essential for reaching international customers and growing your export business.",
         },
         {
-          question: "How much does Alibaba membership cost in India?",
-          answer: "Alibaba membership pricing varies based on the package and features you choose. As an official channel partner, we can offer competitive rates and help you select the most cost-effective package for your business. Contact us for detailed pricing information and current offers.",
+          question: "Why Alibaba is better than its competitors?",
+          answer: "Right Now Alibaba is the only B2B marketplace in the world with millions of global buyers. It has the largest verified buyer base which results in daily 5 lakh genuine enquiries. Also, Alibaba showcases your products in more than 200 countries.",
         },
         {
-          question: "What is the difference between Gold Supplier and Verified Supplier?",
-          answer: "Gold Supplier membership includes premium features like enhanced visibility, detailed analytics, and priority customer support. Verified Supplier is a free membership with basic features. Gold Supplier membership significantly increases your credibility and chances of getting international orders.",
+          question: "How much does Alibaba membership cost in India?",
+          answer: "Alibaba membership pricing starts at Rs 8250/month and varies based on the package and features you choose. As an official channel partner, we can offer competitive rates and help you select the most cost-effective package for your business. Contact us for detailed pricing information and current offers.",
         },
         {
           question: "How long does it take to set up an Alibaba account?",
@@ -54,11 +54,11 @@ const FAQ = () => {
       questions: [
         {
           question: "What documents are needed to start an export business in India?",
-          answer: "Essential documents include: IEC (Import Export Code), GST registration, PAN card, RCMC (Registration cum Membership Certificate), bank account with export credit, and product-specific certifications. We guide you through obtaining all necessary documentation.",
+          answer: "Essential documents include: IEC (Import Export Code), GST registration, PAN card, and product-specific certifications. We guide you through obtaining all necessary documentation.",
         },
         {
           question: "How do I get an IEC (Import Export Code)?",
-          answer: "IEC can be obtained from the DGFT (Directorate General of Foreign Trade) website. The process takes about 7-10 days. We provide complete assistance with the application process, documentation, and follow-up to ensure smooth approval.",
+          answer: "IEC can be obtained from the DGFT (Directorate General of Foreign Trade) website. The process takes only few hours. We provide complete assistance with the application process, documentation, and follow-up to ensure smooth approval.",
         },
         {
           question: "What are the export compliance requirements?",
@@ -66,7 +66,7 @@ const FAQ = () => {
         },
         {
           question: "How does payment work in international trade?",
-          answer: "Common payment methods include Letter of Credit (LC), advance payment via wire transfer, and payment through trade platforms. We guide you on the safest payment terms and help set up international banking facilities for smooth transactions.",
+          answer: "Alibaba.com has recently launched Trade Assurance which is a secure way for the payments, it protects unforeseen circumstances between buyer and suppliers related to purchase. Also, Common payment methods include Letter of Credit (LC), advance payment via wire transfer, and payment through trade platforms. We guide you on the safest payment terms and help set up international banking facilities for smooth transactions.",
         },
       ],
     },
@@ -92,15 +92,19 @@ const FAQ = () => {
       questions: [
         {
           question: "What kind of support do you provide after setup?",
-          answer: "We provide ongoing support including platform training, inquiry management guidance, product listing optimization, performance monitoring, and regular strategy consultations. Our team is always available to help you maximize your export success.",
+          answer: "After the setup Alibaba.com provides you a dedicated service manager who will help you with ongoing support including platform training, inquiry management guidance, product listing optimization, performance monitoring, and regular strategy consultations.",
         },
         {
           question: "Do you provide training on using Alibaba?",
           answer: "Yes, comprehensive training is included in our service. We cover everything from managing inquiries and RFQs to optimizing product listings, using analytics, and best practices for engaging with international buyers.",
         },
         {
-          question: "How quickly can I expect to get international inquiries?",
-          answer: "Timeline varies based on your product category and competition. With proper setup and optimization, most clients start receiving inquiries within 2-4 weeks. Quality and quantity improve as your profile gains credibility and rankings improve.",
+          question: "How much time do I need to dedicate on Alibaba.com?",
+          answer: "Since, Alibaba.com is DIY platform so, we recommend dedicating at least 1-2 hours per day to Alibaba.com. This includes managing inquiries, responding to RFQs, optimizing product listings, and using analytics to track performance. Regular training sessions are also provided to ensure you stay up-to-date with the latest best practices.",
+        },
+        {
+          question: "What if I don’t have time to manage this service myself?",
+          answer: "We completely understand the value of your time. That’s why we offer some service packages that save you efforts and boost your business exponentially. Contact us to explore the best time-saving plan for you.",
         },
       ],
     },

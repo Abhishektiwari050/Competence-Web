@@ -2,23 +2,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Target, Eye, Award, MapPin, ArrowRight, Rocket, Zap, Heart, Users as UsersIcon, TrendingUp, CheckCircle, BarChart3 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import teamPhoto from "@/assets/team-photo.jpg";
-import heroImage from "@/assets/hero-partnership.jpg";
+import heroImage from "@/assets/about.jpeg";
 import { useEffect } from "react";
 
 const About = () => {
-  const location = useLocation();
   const offices = [
     { state: "Delhi NCR", description: "National Capital Region" },
     { state: "Rajasthan", description: "Heritage & Textiles Hub" },
     { state: "Gujarat", description: "Industrial Powerhouse" },
     { state: "Uttar Pradesh", description: "Manufacturing Center" },
   ];
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,7 +47,7 @@ const About = () => {
             className="w-full h-full object-cover"
             loading="eager"
             decoding="async"
-            fetchpriority="high"
+            fetchPriority="high"
           />
         </div>
         <div className="container mx-auto px-4 relative z-10">
@@ -83,7 +78,7 @@ const About = () => {
                 </div>
                 <h2 className="text-3xl font-bold text-primary mb-6">Our Mission</h2>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  To empower Indian manufacturers, traders, and wholesalers to achieve global success by providing expert guidance, comprehensive support, and proven strategies for international e-commerce and export business.
+                  To empower Indian manufacturers, traders, wholesalers and exporters to achieve global success by providing expert guidance, comprehensive support, and proven strategies for international e-commerce and export business.
                 </p>
               </CardContent>
             </Card>
@@ -95,7 +90,7 @@ const About = () => {
                 </div>
                 <h2 className="text-3xl font-bold text-primary mb-6">Our Vision</h2>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  To be the leading force in transforming Indian businesses into globally recognized brands, making "Made in India" a symbol of quality and trust worldwide through digital innovation and strategic partnerships.
+                  To become the leading channel partner of Alibaba.com in India, offering end-to-end digital trade solutions and empowering businesses to thrive in the global e-commerce ecosystem.
                 </p>
               </CardContent>
             </Card>
@@ -117,7 +112,7 @@ const About = () => {
                   className="w-full h-[500px] object-cover"
                   loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6">
@@ -141,7 +136,7 @@ const About = () => {
                   and handicrafts to electronics and industrial machinery.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  We believe in the 'Vocal for Local' initiative and are committed to promoting Indian products 
+                  We believe in the 'Promote Local Sell Global' initiative and are committed to promoting Indian products 
                   on the global stage while maintaining the highest standards of quality and professionalism.
                 </p>
               </div>
@@ -165,38 +160,38 @@ const About = () => {
                 {
                   name: "Ajay Rajpal",
                   role: "Director",
-                  bio: "Visionary leader with 15+ years in international trade. Spearheaded expansion into 50+ countries, helping hundreds of Indian businesses establish their global presence. Expert in strategic partnerships and market development.",
-                  image: "/placeholder.svg"
+                  bio: "Chartered Accountant, with 25+ years’ expertise, has managed multi-crore equity infusions, led restructuring for numerous companies, and established key tax and banking partnerships—delivering transformational results across India’s evolving business landscape.",
+                  image: "/src/assets/ajay.png"
                 },
                 {
                   name: "Simple Rajpal",
                   role: "Director",
-                  bio: "E-commerce and digital transformation expert. Led 200+ successful Alibaba integrations with proven track record in platform optimization. Specializes in helping businesses maximize their online presence and sales.",
-                  image: "/placeholder.svg"
-                },
-                {
-                  name: "Ankit Bidani",
-                  role: "Chief Operations Officer",
-                  bio: "Operations excellence specialist with 14+ years experience. Streamlined processes resulting in 40% efficiency gains. Expert in supply chain management and process optimization for export businesses.",
-                  image: "/placeholder.svg"
+                  bio: "Chartered Accountant and finance leader, recognized for pioneering financial strategies, driving corporate growth, leading major restructurings, successfully managing private equity infusion, and securing high-value contracts in advertising and technology—delivering transformative results and sustainable business impact.",
+                  image: "/src/assets/simple-rajpal.png"
                 },
                 {
                   name: "Amit Midha",
                   role: "Head of Sales",
                   bio: "Sales leadership professional with 13+ years experience. Achieved 300% revenue growth through innovative sales strategies. Specializes in client relations and building long-term partnerships.",
-                  image: "/placeholder.svg"
+                  image: "/src/assets/amit.png"
+                },
+                {
+                  name: "Ankit Bidani",
+                  role: "Chief Operations Officer",
+                  bio: "Operations excellence specialist with 14+ years experience. Streamlined processes resulting in 40% efficiency gains. Expert in supply chain management and process optimization for export businesses.",
+                  image: "/src/assets/ankit-bidani.png"
                 },
                 {
                   name: "Kanika Shekhawat",
-                  role: "Head Of Service",
-                  bio: "Data-driven strategist with 10+ years in market analysis and business intelligence. Expert in identifying growth opportunities and optimizing business processes for export success.",
-                  image: "/placeholder.svg"
+                  role: "HOD(Service)",
+                  bio: "Customer service excellence leader with 12+ years experience. Ensures seamless client experience and maintains 95% satisfaction rate through dedicated support and quality service delivery.",
+                  image: "/src/assets/kanika.png"
                 },
                 {
                   name: "Manan Saxena Jain",
                   role: "Business Analyst",
-                  bio: "Customer service excellence leader with 12+ years experience. Ensures seamless client experience and maintains 95% satisfaction rate through dedicated support and quality service delivery.",
-                  image: "/placeholder.svg"
+                  bio: "Young and dynamic Business Analyst who brings a data-driven approach to business operations. He has contributed to optimizing workflows and supporting decisions that impact over 900+ clients. With a strong analytical mindset and enthusiasm for process improvement, he focuses on creating efficiency and measurable growth within the organization.",
+                  image: "/src/assets/manan.png"
                 },
               ].map((member, index) => (
                 <div
@@ -241,7 +236,7 @@ const About = () => {
                 <Award className="h-16 w-16 text-accent mx-auto" />
               </div>
               <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">
-                Official Alibaba Channel Partner
+                Authorized Alibaba Channel Partner
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
                 As an authorized Alibaba channel partner, we have direct access to Alibaba's resources, training, and support systems.
@@ -250,10 +245,10 @@ const About = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 scroll-animate-stagger">
               {[
-                { icon: Target, title: "Expert Guidance", desc: "Comprehensive knowledge of Alibaba's platform, algorithms, and best practices for supplier success." },
-                { icon: Zap, title: "Priority Support", desc: "Direct communication channels with Alibaba's team for faster resolution of issues and queries." },
-                { icon: TrendingUp, title: "Competitive Pricing", desc: "Access to special rates and packages for Alibaba supplier memberships and premium features." },
-                { icon: Rocket, title: "Latest Updates", desc: "First access to new features, tools, and marketplace trends to keep you ahead of competition." }
+                { icon: Target, title: "Official Partnership", desc: "Recognized by Alibaba.com as an Authorized Channel Partner, ensuring genuine support and verified services. Trusted bridge between Indian exporters and the world’s largest B2B marketplace." },
+                { icon: Zap, title: "Customized Growth Strategy", desc: "We create a personalized export success roadmap, tailored to your industry, product category, and target regions. Our experts analyze your business potential, optimize your Alibaba presence, and guide you with data-driven strategies to maximize global reach and sales performance." },
+                { icon: TrendingUp, title: "After-Sales & Ongoing Support", desc: "Continuous account monitoring and performance reviews to ensure clients stay competitive. Assistance with renewals, upselling opportunities, and success strategy planning." },
+                { icon: Rocket, title: "Verified Seller Privileges", desc: "Get prioritized verification support to become a Gold or Verified Supplier, boosting your trust score, visibility, and buyer confidence. Enjoy faster approvals, premium credibility, and higher chances of attracting quality global buyers." }
               ].map((item, index) => (
                 <div
                   key={index}
@@ -324,9 +319,9 @@ const About = () => {
             {/* Success Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 scroll-animate-stagger">
               {[
-                { icon: CheckCircle, value: "95%", label: "Customer Satisfaction", color: "from-green-500 to-green-600" },
-                { icon: UsersIcon, value: "500+", label: "Successful Export Partnerships", color: "from-accent to-accent/80" },
-                { icon: BarChart3, value: "10+", label: "Years of Industry Experience", color: "from-primary to-primary/80" }
+                { icon: CheckCircle, value: "90%", label: "Customer Satisfaction", color: "from-green-500 to-green-600" },
+                { icon: UsersIcon, value: "950+", label: "Successful Export Partnerships", color: "from-accent to-accent/80" },
+                { icon: BarChart3, value: "12+", label: "Years of Industry Experience", color: "from-primary to-primary/80" }
               ].map((item, index) => (
                 <div
                   key={index}
