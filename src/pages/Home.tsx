@@ -20,6 +20,9 @@ import heroLogistics from "@/assets/hero-logistics.jpg";
 import heroProducts from "@/assets/hero-products.jpg";
 import alibabaImage from "@/assets/alibaba-consulting.jpg";
 import exportImage from "@/assets/export-consulting.jpg";
+import testimonialPre from "@/assets/Pre.png";
+import testimonialTech from "@/assets/tech.png";
+import testimonialHand from "@/assets/hand.png";
 
 const Home = () => {
   const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
@@ -106,19 +109,19 @@ const Home = () => {
       quote: "Competence Consulting helped us transform from a local manufacturer to a global exporter. Their Alibaba expertise is unmatched!",
       name: "Rajesh Kumar",
       designation: "CEO, Premium Textiles Pvt Ltd",
-      src: "/src/assets/Pre.png",
+      src: testimonialPre,
     },
     {
       quote: "Professional, knowledgeable, and result-oriented. We've seen a 300% increase in international inquiries within 6 months.",
       name: "Priya Sharma",
       designation: "Director, TechElectro Industries",
-      src: "/src/assets/tech.png",
+      src: testimonialTech,
     },
     {
       quote: "The team guided us through every step of the export process. Now we're successfully exporting to 15 countries!",
       name: "Amit Patel",
       designation: "Founder, Handicrafts Exports",
-      src: "/src/assets/hand.png",
+      src: testimonialHand,
     },
   ];
 
