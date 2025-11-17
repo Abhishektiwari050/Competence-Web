@@ -5,6 +5,12 @@ import { Target, Eye, Award, MapPin, ArrowRight, Rocket, Zap, Heart, Users as Us
 import { Link } from "react-router-dom";
 import teamPhoto from "@/assets/team-photo.jpg";
 import heroImage from "@/assets/about.jpeg";
+import ajayImage from "@/assets/ajay.png";
+import simpleRajpalImage from "@/assets/simple-rajpal.png";
+import amitImage from "@/assets/amit.png";
+import ankitBidaniImage from "@/assets/ankit-bidani.png";
+import kanikaImage from "@/assets/kanika.png";
+import mananImage from "@/assets/manan.png";
 import { useEffect } from "react";
 
 const About = () => {
@@ -161,37 +167,37 @@ const About = () => {
                   name: "Ajay Rajpal",
                   role: "Director",
                   bio: "Chartered Accountant, with 25+ years’ expertise, has managed multi-crore equity infusions, led restructuring for numerous companies, and established key tax and banking partnerships—delivering transformational results across India’s evolving business landscape.",
-                  image: "/src/assets/ajay.png"
+                  image: ajayImage
                 },
                 {
                   name: "Simple Rajpal",
                   role: "Director",
                   bio: "Chartered Accountant and finance leader, recognized for pioneering financial strategies, driving corporate growth, leading major restructurings, successfully managing private equity infusion, and securing high-value contracts in advertising and technology—delivering transformative results and sustainable business impact.",
-                  image: "/src/assets/simple-rajpal.png"
+                  image: simpleRajpalImage
                 },
                 {
                   name: "Amit Midha",
                   role: "Head of Sales",
                   bio: "Sales leadership professional with 13+ years experience. Achieved 300% revenue growth through innovative sales strategies. Specializes in client relations and building long-term partnerships.",
-                  image: "/src/assets/amit.png"
+                  image: amitImage
                 },
                 {
                   name: "Ankit Bidani",
                   role: "Chief Operations Officer",
                   bio: "Operations excellence specialist with 14+ years experience. Streamlined processes resulting in 40% efficiency gains. Expert in supply chain management and process optimization for export businesses.",
-                  image: "/src/assets/ankit-bidani.png"
+                  image: ankitBidaniImage
                 },
                 {
                   name: "Kanika Shekhawat",
                   role: "HOD(Service)",
                   bio: "Customer service excellence leader with 12+ years experience. Ensures seamless client experience and maintains 95% satisfaction rate through dedicated support and quality service delivery.",
-                  image: "/src/assets/kanika.png"
+                  image: kanikaImage
                 },
                 {
                   name: "Manan Saxena Jain",
                   role: "Business Analyst",
                   bio: "Young and dynamic Business Analyst who brings a data-driven approach to business operations. He has contributed to optimizing workflows and supporting decisions that impact over 900+ clients. With a strong analytical mindset and enthusiasm for process improvement, he focuses on creating efficiency and measurable growth within the organization.",
-                  image: "/src/assets/manan.png"
+                  image: mananImage
                 },
               ].map((member, index) => (
                 <div
