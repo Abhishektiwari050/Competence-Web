@@ -1,27 +1,49 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const ThankYou = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Inject Contentsquare script
-        const script = document.createElement('script');
-        script.src = "https://t.contentsquare.net/uxa/15a4cb85c2059.js";
-        script.async = true;
-        document.head.appendChild(script);
+        // Contentsquare Script
+        const csScript = document.createElement("script");
+        csScript.type = "text/javascript";
+        csScript.async = true;
+        csScript.src = "https://t.contentsquare.net/uxa/15a4cb85c2059.js";
+        document.head.appendChild(csScript);
 
-        // Redirect after 5 seconds
+        // Meta Pixel Script
+        const metaScript = document.createElement("script");
+        metaScript.innerHTML = `
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '1890141068251374');
+          fbq('track', 'PageView');
+        `;
+        document.head.appendChild(metaScript);
+
+        // Meta Pixel Noscript
+        const metaNoscript = document.createElement("noscript");
+        metaNoscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1890141068251374&ev=PageView&noscript=1" />`;
+        document.body.appendChild(metaNoscript);
+
         const timer = setTimeout(() => {
             navigate("/");
         }, 5000);
 
         return () => {
-            document.head.removeChild(script);
+            document.head.removeChild(csScript);
+            document.head.removeChild(metaScript);
+            document.body.removeChild(metaNoscript);
             clearTimeout(timer);
         };
     }, [navigate]);
