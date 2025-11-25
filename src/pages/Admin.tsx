@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, Save, Upload, X, Search, Edit, Trash2, CheckCircle, AlertCircle, HelpCircle, Plus, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useLocation } from "react-router-dom";
 
 import { markdownToHtml } from "../../markdown-parser/src/index";
 
@@ -26,6 +28,8 @@ interface BlogPost {
 }
 
 const Admin = () => {
+  const location = useLocation();
+  const urlToken = new URLSearchParams(location.search).get("token") || "";
   const { toast } = useToast();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [currentPost, setCurrentPost] = useState<BlogPost>({
@@ -64,7 +68,7 @@ const Admin = () => {
   }, [currentPost]);
 
   // Default blog posts from the website
-  const defaultBlogPosts: BlogPost[] = [
+  const defaultBlogPosts: BlogPost[] = useMemo(() => [
     {
       id: "1",
       title: "Complete Guide to Exporting from India: Step-by-Step Process",
@@ -131,17 +135,34 @@ const Admin = () => {
       createdAt: "2023-12-20",
       updatedAt: "2023-12-20",
     },
-  ];
+  ], []);
 
-  // Load posts from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("blogPosts");
-    if (saved) {
-      setPosts(JSON.parse(saved));
-    } else {
-      setPosts([]);
+  
+
+  const loadPosts = useCallback(async () => {
+    try {
+      if (!isSupabaseConfigured || !supabase) {
+        const local = localStorage.getItem("blogPosts");
+        const merged = local ? JSON.parse(local) : defaultBlogPosts;
+        setPosts(Array.isArray(merged) ? merged : defaultBlogPosts);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error) setPosts(data || []);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load blog posts",
+        variant: "destructive",
+      });
     }
-    
+  }, [toast, defaultBlogPosts]);
+
+  const loadDraft = useCallback(() => {
     const draft = localStorage.getItem("draft");
     if (draft && !isEditing) {
       const draftPost = JSON.parse(draft);
@@ -152,14 +173,20 @@ const Admin = () => {
         });
       }
     }
-  }, []);
+  }, [isEditing, toast]);
+
+  // Load posts from Supabase
+  useEffect(() => {
+    loadPosts();
+    loadDraft();
+  }, [loadPosts, loadDraft]);
 
   const savePosts = (updatedPosts: BlogPost[]) => {
     setPosts(updatedPosts);
     localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!currentPost.title || !currentPost.content || !currentPost.category) {
       toast({
         title: "Missing Information",
@@ -169,69 +196,224 @@ const Admin = () => {
       return;
     }
 
-    const newPost = {
-      ...currentPost,
-      id: currentPost.id || Date.now().toString(),
-      status: "published" as const,
-      createdAt: currentPost.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    try {
+      if (isSupabaseConfigured && !urlToken) {
+        toast({ title: "Token Required", description: "Provide a valid URL token to publish.", variant: "destructive" });
+        return;
+      }
+      const imageUrl = await uploadImageIfNeeded(currentPost.image);
+      const postData = {
+        title: currentPost.title,
+        content: currentPost.content,
+        category: currentPost.category,
+        tags: currentPost.tags,
+        image: imageUrl,
+        status: "published" as const,
+        updated_at: new Date().toISOString(),
+      };
 
-    const updatedPosts = currentPost.id
-      ? posts.map(p => p.id === currentPost.id ? newPost : p)
-      : [...posts, newPost];
+      if (urlToken) {
+        const resp = await fetch(`/api/posts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: urlToken, ...postData }),
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+      } else if (!isSupabaseConfigured || !supabase) {
+        const now = new Date().toISOString();
+        const newPost: BlogPost = {
+          id: currentPost.id || crypto.randomUUID(),
+          title: currentPost.title,
+          content: currentPost.content,
+          category: currentPost.category,
+          tags: currentPost.tags,
+          image: imageUrl,
+          status: "published",
+          createdAt: currentPost.createdAt || now,
+          updatedAt: now,
+        };
+        const updated = isEditing ? posts.map(p => p.id === newPost.id ? newPost : p) : [newPost, ...posts];
+        savePosts(updated);
+      } else if (isEditing && currentPost.id) {
+        // Update existing post
+        const { error } = await supabase
+          .from('blog_posts')
+          .update(postData)
+          .eq('id', currentPost.id);
 
-    savePosts(updatedPosts);
-    localStorage.removeItem("draft");
-    
-    toast({
-      title: "✅ Published Successfully!",
-      description: "Your blog post is now live.",
-    });
+        if (error) throw error;
+      } else {
+        // Create new post
+        const { error } = await supabase
+          .from('blog_posts')
+          .insert([postData]);
 
-    resetForm();
-  };
+        if (error) throw error;
+      }
 
-  const handleSaveDraft = () => {
-    const newPost = {
-      ...currentPost,
-      id: currentPost.id || Date.now().toString(),
-      status: "draft" as const,
-      createdAt: currentPost.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const updatedPosts = currentPost.id
-      ? posts.map(p => p.id === currentPost.id ? newPost : p)
-      : [...posts, newPost];
-
-    savePosts(updatedPosts);
-    
-    toast({
-      title: "💾 Draft Saved",
-      description: "Your changes have been saved.",
-    });
-  };
-
-  const handleUnpublish = (id: string) => {
-    const updatedPosts = posts.map(p =>
-      p.id === id ? { ...p, status: "draft" as const } : p
-    );
-    savePosts(updatedPosts);
-    
-    toast({
-      title: "Post Unpublished",
-      description: "The post has been moved to drafts.",
-    });
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this post?")) {
-      savePosts(posts.filter(p => p.id !== id));
       toast({
-        title: "Post Deleted",
-        description: "The post has been removed.",
+        title: "✅ Published Successfully!",
+        description: "Your blog post is now live.",
       });
+      
+      resetForm();
+      setIsEditing(false);
+      localStorage.removeItem("draft");
+      loadPosts(); // Refresh the posts list
+    } catch (error) {
+      console.error('Error publishing post:', error);
+      toast({
+        title: "Error",
+        description: "Failed to publish blog post",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (!currentPost.title || !currentPost.content) {
+      toast({
+        title: "Missing Content",
+        description: "Please add at least a title and some content before saving as draft.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (isSupabaseConfigured && !urlToken) {
+        toast({ title: "Token Required", description: "Provide a valid URL token to save draft.", variant: "destructive" });
+        return;
+      }
+      const imageUrl = await uploadImageIfNeeded(currentPost.image);
+      const postData = {
+        title: currentPost.title,
+        content: currentPost.content,
+        category: currentPost.category,
+        tags: currentPost.tags,
+        image: imageUrl,
+        status: "draft" as const,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (urlToken) {
+        const resp = await fetch(`/api/posts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: urlToken, ...postData }),
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+      } else if (!isSupabaseConfigured || !supabase) {
+        const now = new Date().toISOString();
+        const newPost: BlogPost = {
+          id: currentPost.id || crypto.randomUUID(),
+          title: currentPost.title,
+          content: currentPost.content,
+          category: currentPost.category,
+          tags: currentPost.tags,
+          image: imageUrl,
+          status: "draft",
+          createdAt: currentPost.createdAt || now,
+          updatedAt: now,
+        };
+        const updated = isEditing ? posts.map(p => p.id === newPost.id ? newPost : p) : [newPost, ...posts];
+        savePosts(updated);
+      } else if (isEditing && currentPost.id) {
+        // Update existing draft
+        const { error } = await supabase
+          .from('blog_posts')
+          .update(postData)
+          .eq('id', currentPost.id);
+
+        if (error) throw error;
+      } else {
+        // Create new draft
+        const { error } = await supabase
+          .from('blog_posts')
+          .insert([postData]);
+
+        if (error) throw error;
+      }
+
+      toast({
+        title: "💾 Draft Saved",
+        description: "Your draft has been saved successfully.",
+      });
+      
+      resetForm();
+      setIsEditing(false);
+      localStorage.removeItem("draft");
+      loadPosts(); // Refresh the posts list
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save draft",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUnpublish = async (id: string) => {
+    try {
+      if (isSupabaseConfigured && !urlToken) {
+        toast({ title: "Token Required", description: "Provide a valid URL token to unpublish.", variant: "destructive" });
+        return;
+      }
+      if (urlToken) {
+        const resp = await fetch(`/api/posts/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: urlToken, status: 'draft' }),
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+      } else if (!isSupabaseConfigured || !supabase) {
+        const updated = posts.map(p => p.id === id ? { ...p, status: 'draft', updatedAt: new Date().toISOString() } : p);
+        savePosts(updated);
+      } else {
+        const { error } = await supabase
+          .from('blog_posts')
+          .update({ status: 'draft', updated_at: new Date().toISOString() })
+          .eq('id', id);
+        if (error) throw error;
+      }
+      toast({ title: "Post Unpublished", description: "The post has been moved to drafts." });
+      loadPosts();
+    } catch (error) {
+      console.error('Error unpublishing post:', error);
+      toast({ title: "Error", description: "Failed to unpublish post", variant: "destructive" });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    try {
+      if (isSupabaseConfigured && !urlToken) {
+        toast({ title: "Token Required", description: "Provide a valid URL token to delete.", variant: "destructive" });
+        return;
+      }
+      if (urlToken) {
+        const resp = await fetch(`/api/posts/${id}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: urlToken }),
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+      } else if (!isSupabaseConfigured || !supabase) {
+        const updated = posts.filter(p => p.id !== id);
+        savePosts(updated);
+      } else {
+        const { error } = await supabase
+          .from('blog_posts')
+          .delete()
+          .eq('id', id);
+        if (error) throw error;
+      }
+      toast({ title: "Post Deleted", description: "The post has been removed." });
+      loadPosts();
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      toast({ title: "Error", description: "Failed to delete post", variant: "destructive" });
     }
   };
 
@@ -387,6 +569,11 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4 max-w-7xl">
+        {!isSupabaseConfigured && (
+          <div className="mb-6 p-4 border rounded bg-yellow-50 text-yellow-800">
+            Supabase not configured. Using local storage. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+          </div>
+        )}
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -920,3 +1107,33 @@ const Admin = () => {
 };
 
 export default Admin;
+const SUPABASE_BUCKET = import.meta.env.VITE_SUPABASE_BUCKET || "";
+
+async function uploadImageIfNeeded(image: string): Promise<string> {
+  try {
+    if (!image || !image.startsWith("data:")) return image;
+    if (!SUPABASE_BUCKET || !isSupabaseConfigured || !supabase) return image;
+
+    const match = image.match(/^data:(.*?);base64,/);
+    const mime = match?.[1] || "image/png";
+    const ext = mime === "image/jpeg" ? "jpg" : mime.split("/")[1] || "bin";
+    const path = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+    const res = await fetch(image);
+    const blob = await res.blob();
+
+    const { error: uploadError } = await supabase.storage.from(SUPABASE_BUCKET).upload(path, blob, {
+      contentType: mime,
+    });
+    if (uploadError) {
+      console.error("Image upload error:", uploadError);
+      return image;
+    }
+
+    const { data } = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(path);
+    return data.publicUrl || image;
+  } catch (e) {
+    console.error("Image upload failed:", e);
+    return image;
+  }
+}

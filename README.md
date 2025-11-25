@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-The development server runs on `http://localhost:8080/` by default.
+The development server runs on `http://localhost:5173/` by default.
 
 ## Scripts
 

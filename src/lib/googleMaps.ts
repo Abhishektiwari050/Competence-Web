@@ -11,12 +11,13 @@ export function loadGoogleMapsApi(): Promise<typeof google> {
     const existing = document.querySelector<HTMLScriptElement>(
       'script[data-google-maps-api]'
     );
-    if (existing && (window as any).google && (window as any).google.maps) {
-      resolve((window as any).google);
+    const w = window as Window & { google?: typeof google };
+    if (existing && w.google && w.google.maps) {
+      resolve(w.google);
       return;
     }
 
-    const apiKey = (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY;
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     if (!apiKey) {
       reject(new Error('Missing VITE_GOOGLE_MAPS_API_KEY in environment.'));
       return;
@@ -29,8 +30,9 @@ export function loadGoogleMapsApi(): Promise<typeof google> {
     script.setAttribute('data-google-maps-api', 'true');
 
     script.onload = () => {
-      if ((window as any).google && (window as any).google.maps) {
-        resolve((window as any).google);
+      const w2 = window as Window & { google?: typeof google };
+      if (w2.google && w2.google.maps) {
+        resolve(w2.google);
       } else {
         reject(new Error('Google Maps API loaded but window.google.maps missing'));
       }

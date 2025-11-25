@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import bannerContact from "@/assets/banner-contact.jpg";
 
 const Contact = () => {
@@ -52,15 +53,39 @@ const Contact = () => {
     
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      if (!isSupabaseConfigured || !supabase) {
+        toast({ title: "Supabase not connected", description: "Please configure Supabase to submit the form.", variant: "destructive" });
+        setIsSubmitting(false);
+        return;
+      }
+
+      const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([{ 
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          company: formData.company.trim() || null,
+          message: formData.message.trim(),
+          page: 'contact',
+          user_agent: userAgent,
+          status: 'new'
+        }]);
+      if (error) throw error;
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 24 hours.",
       });
       setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+    } catch (err) {
+      console.error('Contact submit error:', err);
+      toast({ title: "Submission failed", description: "Please try again later.", variant: "destructive" });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

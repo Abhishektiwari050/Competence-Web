@@ -52,10 +52,11 @@ export default function OfficeMap() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Initialize when visible
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || hasInitialized) return;
     whenInViewport(containerRef.current, async () => {
       try {
         setIsLoading(true);
@@ -79,7 +80,7 @@ export default function OfficeMap() {
           scale: 1.2,
         } as unknown as google.maps.Symbol;
 
-        const marker = new (google.maps as any).marker.AdvancedMarkerElement({
+        const marker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: office.coords,
           title: office.label,
@@ -94,6 +95,7 @@ export default function OfficeMap() {
         });
         info.open({ map, anchor: marker });
         infoRef.current = info;
+        setHasInitialized(true);
       } catch (err) {
         // Fail gracefully: show fallback state
         console.error(err);
@@ -102,7 +104,7 @@ export default function OfficeMap() {
         setIsLoading(false);
       }
     });
-  }, []);
+  }, [activeTab, hasInitialized]);
 
   // Handle tab change transitions
   useEffect(() => {
@@ -117,7 +119,7 @@ export default function OfficeMap() {
     map.setZoom(16);
 
     // Move marker and update info window
-    (markerRef.current as any).position = office.coords;
+    markerRef.current.position = office.coords;
     if (infoRef.current) {
       infoRef.current.setContent(
         `<div style="font-family: system-ui, -apple-system, Segoe UI;">
@@ -125,7 +127,7 @@ export default function OfficeMap() {
           <span>${office.address}</span>
         </div>`
       );
-      infoRef.current.open({ map, anchor: markerRef.current as any });
+      infoRef.current.open({ map, anchor: markerRef.current });
     }
 
     const timer = setTimeout(() => setIsTransitioning(false), 300);

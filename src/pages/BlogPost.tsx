@@ -764,21 +764,48 @@ Proper documentation is the backbone of successful export operations. While the 
     },
   ];
 
-  // Check admin posts first, then default posts
-  let post = adminPosts.find(p => p.id === id);
-  
-  if (post) {
-    // Convert admin post to display format
+  // Build display post
+  type DisplayPost = {
+    id: string;
+    title: string;
+    content: string;
+    category: string;
+    author: string;
+    date: string;
+    readTime: string;
+    image: string;
+    excerpt: string;
+  };
+
+  let post: DisplayPost | undefined;
+  const adminPost = adminPosts.find(p => p.id === id);
+  if (adminPost) {
     post = {
-      ...post,
-      excerpt: post.content.slice(0, 150) + "...",
+      id: adminPost.id,
+      title: adminPost.title,
+      content: adminPost.content,
+      category: adminPost.category,
       author: "Admin",
-      date: post.createdAt,
-      readTime: Math.ceil(post.content.split(" ").length / 200) + " min read",
-      image: post.image || blogExportProducts,
-    } as any;
+      date: adminPost.createdAt,
+      readTime: Math.ceil(adminPost.content.split(" ").length / 200) + " min read",
+      image: adminPost.image || blogExportProducts,
+      excerpt: adminPost.content.slice(0, 150) + "...",
+    };
   } else {
-    post = blogPosts.find(p => p.id === id);
+    const defaultPost = blogPosts.find(p => p.id === id);
+    if (defaultPost) {
+      post = {
+        id: defaultPost.id,
+        title: defaultPost.title,
+        content: defaultPost.content,
+        category: defaultPost.category,
+        author: "Competence Team",
+        date: defaultPost.date,
+        readTime: defaultPost.readTime,
+        image: defaultPost.image,
+        excerpt: defaultPost.excerpt,
+      };
+    }
   }
 
   if (!post) {

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle, Globe, TrendingUp, Target, Shield, Star, Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import LeadCapturePopup from "@/components/LeadCapturePopup";
 import { ScrollAnimationWrapper } from "@/components/ScrollAnimationWrapper";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
@@ -23,6 +24,25 @@ import exportImage from "@/assets/export-consulting.jpg";
 import testimonialPre from "@/assets/Pre.png";
 import testimonialTech from "@/assets/tech.png";
 import testimonialHand from "@/assets/hand.png";
+
+interface SupabaseTestimonial {
+  id: string;
+  name: string;
+  company: string;
+  industry: string;
+  location: string;
+  rating: number;
+  quote: string;
+  image: string;
+  created_at: string;
+}
+
+interface FormattedTestimonial {
+  quote: string;
+  name: string;
+  designation: string;
+  src: string;
+}
 
 const Home = () => {
   const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
@@ -104,7 +124,7 @@ const Home = () => {
     { icon: Star, text: "Serving over 950 Clients with a 90% Satisfaction rate", color: "text-primary" },
   ];
 
-  const testimonials = [
+  const [testimonials, setTestimonials] = useState<FormattedTestimonial[]>([
     {
       quote: "Competence Consulting helped us transform from a local manufacturer to a global exporter. Their Alibaba expertise is unmatched!",
       name: "Rajesh Kumar",
@@ -123,7 +143,34 @@ const Home = () => {
       designation: "Founder, Handicrafts Exports",
       src: testimonialHand,
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    const loadTestimonials = async () => {
+      if (!isSupabaseConfigured || !supabase) return;
+      try {
+        const { data, error } = await supabase
+          .from('testimonials')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (!error && data && data.length > 0) {
+          const formattedTestimonials = data.map((testimonial: SupabaseTestimonial) => ({
+            quote: testimonial.quote,
+            name: testimonial.name,
+            designation: `${testimonial.company}, ${testimonial.location}`,
+            src: testimonial.image || testimonialPre,
+          }));
+          setTestimonials(formattedTestimonials);
+        }
+      } catch (e) {
+        void e;
+      }
+    };
+
+    loadTestimonials();
+  }, []);
 
   return (
     <div className="min-h-screen overflow-hidden">

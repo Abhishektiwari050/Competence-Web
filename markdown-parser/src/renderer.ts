@@ -36,9 +36,10 @@ export function render(node: Node): string {
       return `<p>${renderNodes(node.children || [])}</p>`;
     case 'blockquote':
       return `<blockquote>${renderNodes(node.children || [])}</blockquote>`;
-    case 'list':
+    case 'list': {
       const tag = node.ordered ? 'ol' : 'ul';
       return `<${tag}>${renderNodes(node.children || [])}</${tag}>`;
+    }
     case 'listItem':
       return `<li>${renderNodes(node.children || [])}</li>`;
     case 'code':
