@@ -28,3 +28,64 @@ on public.contact_messages
 for select
 to authenticated
 using (true);
+
+-- Create the blog_posts table
+create table public.blog_posts (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  title text not null,
+  content text not null,
+  category text not null,
+  tags text[] default '{}',
+  image text,
+  status text default 'draft' check (status in ('draft', 'published'))
+);
+
+-- Enable RLS
+alter table public.blog_posts enable row level security;
+
+-- Policies for blog_posts
+create policy "Enable read access for all users"
+on public.blog_posts for select
+using (true);
+
+create policy "Enable insert for authenticated users only"
+on public.blog_posts for insert
+to authenticated
+with check (true);
+
+create policy "Enable update for authenticated users only"
+on public.blog_posts for update
+to authenticated
+using (true);
+
+create policy "Enable delete for authenticated users only"
+on public.blog_posts for delete
+to authenticated
+using (true);
+
+-- Storage bucket for images
+insert into storage.buckets (id, name, public)
+values ('images', 'images', true)
+on conflict (id) do nothing;
+
+-- Storage policies
+create policy "Give public access to images"
+on storage.objects for select
+using ( bucket_id = 'images' );
+
+create policy "Enable upload for authenticated users"
+on storage.objects for insert
+to authenticated
+with check ( bucket_id = 'images' );
+
+create policy "Enable update for authenticated users"
+on storage.objects for update
+to authenticated
+using ( bucket_id = 'images' );
+
+create policy "Enable delete for authenticated users"
+on storage.objects for delete
+to authenticated
+using ( bucket_id = 'images' );

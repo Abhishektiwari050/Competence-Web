@@ -23,8 +23,8 @@ interface BlogPost {
   tags: string[];
   image: string;
   status: "draft" | "published";
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const Admin = () => {
@@ -40,8 +40,8 @@ const Admin = () => {
     tags: [],
     image: "",
     status: "draft",
-    createdAt: "",
-    updatedAt: "",
+    created_at: "",
+    updated_at: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -61,7 +61,7 @@ const Admin = () => {
       const timer = setTimeout(() => {
         localStorage.setItem("draft", JSON.stringify(currentPost));
         setAutoSaveStatus("saved");
-        setTimeout(() => setAutoSaveStatus(""), 2000);
+        setTimeout(() => setAutoSaveStatus(null), 2000);
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -77,8 +77,8 @@ const Admin = () => {
       tags: ["Export", "Documentation", "Compliance"],
       image: "",
       status: "published",
-      createdAt: "2024-01-15",
-      updatedAt: "2024-01-15",
+      created_at: "2024-01-15",
+      updated_at: "2024-01-15",
     },
     {
       id: "2",
@@ -88,8 +88,8 @@ const Admin = () => {
       tags: ["Alibaba", "E-commerce", "Marketing"],
       image: "",
       status: "published",
-      createdAt: "2024-01-10",
-      updatedAt: "2024-01-10",
+      created_at: "2024-01-10",
+      updated_at: "2024-01-10",
     },
     {
       id: "3",
@@ -99,8 +99,8 @@ const Admin = () => {
       tags: ["Export", "Marketing"],
       image: "",
       status: "published",
-      createdAt: "2024-01-05",
-      updatedAt: "2024-01-05",
+      created_at: "2024-01-05",
+      updated_at: "2024-01-05",
     },
     {
       id: "4",
@@ -110,8 +110,8 @@ const Admin = () => {
       tags: ["Documentation", "Compliance", "Export"],
       image: "",
       status: "published",
-      createdAt: "2024-01-01",
-      updatedAt: "2024-01-01",
+      created_at: "2024-01-01",
+      updated_at: "2024-01-01",
     },
     {
       id: "5",
@@ -121,8 +121,8 @@ const Admin = () => {
       tags: ["Export"],
       image: "",
       status: "published",
-      createdAt: "2023-12-28",
-      updatedAt: "2023-12-28",
+      created_at: "2023-12-28",
+      updated_at: "2023-12-28",
     },
     {
       id: "6",
@@ -132,12 +132,10 @@ const Admin = () => {
       tags: ["Alibaba", "E-commerce", "Marketing"],
       image: "",
       status: "published",
-      createdAt: "2023-12-20",
-      updatedAt: "2023-12-20",
+      created_at: "2023-12-20",
+      updated_at: "2023-12-20",
     },
   ], []);
-
-  
 
   const loadPosts = useCallback(async () => {
     try {
@@ -198,9 +196,9 @@ const Admin = () => {
 
     try {
       if (isSupabaseConfigured && !urlToken) {
-        toast({ title: "Token Required", description: "Provide a valid URL token to publish.", variant: "destructive" });
-        return;
+        // Allow admin actions
       }
+
       const imageUrl = await uploadImageIfNeeded(currentPost.image);
       const postData = {
         title: currentPost.title,
@@ -212,14 +210,7 @@ const Admin = () => {
         updated_at: new Date().toISOString(),
       };
 
-      if (urlToken) {
-        const resp = await fetch(`/api/posts`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: urlToken, ...postData }),
-        });
-        if (!resp.ok) throw new Error(await resp.text());
-      } else if (!isSupabaseConfigured || !supabase) {
+      if (!isSupabaseConfigured || !supabase) {
         const now = new Date().toISOString();
         const newPost: BlogPost = {
           id: currentPost.id || crypto.randomUUID(),
@@ -229,8 +220,8 @@ const Admin = () => {
           tags: currentPost.tags,
           image: imageUrl,
           status: "published",
-          createdAt: currentPost.createdAt || now,
-          updatedAt: now,
+          created_at: currentPost.created_at || now,
+          updated_at: now,
         };
         const updated = isEditing ? posts.map(p => p.id === newPost.id ? newPost : p) : [newPost, ...posts];
         savePosts(updated);
@@ -255,7 +246,7 @@ const Admin = () => {
         title: "✅ Published Successfully!",
         description: "Your blog post is now live.",
       });
-      
+
       resetForm();
       setIsEditing(false);
       localStorage.removeItem("draft");
@@ -282,8 +273,7 @@ const Admin = () => {
 
     try {
       if (isSupabaseConfigured && !urlToken) {
-        toast({ title: "Token Required", description: "Provide a valid URL token to save draft.", variant: "destructive" });
-        return;
+        // Allow admin actions
       }
       const imageUrl = await uploadImageIfNeeded(currentPost.image);
       const postData = {
@@ -313,8 +303,8 @@ const Admin = () => {
           tags: currentPost.tags,
           image: imageUrl,
           status: "draft",
-          createdAt: currentPost.createdAt || now,
-          updatedAt: now,
+          created_at: currentPost.created_at || now,
+          updated_at: now,
         };
         const updated = isEditing ? posts.map(p => p.id === newPost.id ? newPost : p) : [newPost, ...posts];
         savePosts(updated);
@@ -339,7 +329,7 @@ const Admin = () => {
         title: "💾 Draft Saved",
         description: "Your draft has been saved successfully.",
       });
-      
+
       resetForm();
       setIsEditing(false);
       localStorage.removeItem("draft");
@@ -357,8 +347,7 @@ const Admin = () => {
   const handleUnpublish = async (id: string) => {
     try {
       if (isSupabaseConfigured && !urlToken) {
-        toast({ title: "Token Required", description: "Provide a valid URL token to unpublish.", variant: "destructive" });
-        return;
+        // Allow admin actions
       }
       if (urlToken) {
         const resp = await fetch(`/api/posts/${id}`, {
@@ -368,7 +357,7 @@ const Admin = () => {
         });
         if (!resp.ok) throw new Error(await resp.text());
       } else if (!isSupabaseConfigured || !supabase) {
-        const updated = posts.map(p => p.id === id ? { ...p, status: 'draft', updatedAt: new Date().toISOString() } : p);
+        const updated = posts.map(p => p.id === id ? { ...p, status: 'draft' as const, updated_at: new Date().toISOString() } : p);
         savePosts(updated);
       } else {
         const { error } = await supabase
@@ -431,8 +420,8 @@ const Admin = () => {
       tags: [],
       image: "",
       status: "draft",
-      createdAt: "",
-      updatedAt: "",
+      created_at: "",
+      updated_at: "",
     });
     setIsEditing(false);
   };
@@ -449,7 +438,7 @@ const Admin = () => {
       while (lineStart > 0 && content[lineStart - 1] !== '\n') {
         lineStart--;
       }
-      
+
       let lineEnd = end;
       while (lineEnd < content.length && content[lineEnd] !== '\n') {
         lineEnd++;

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import blogDocumentation from "@/assets/blog-documentation.jpg";
 import blogAlibaba from "@/assets/blog-alibaba.jpg";
 import blogExportProducts from "@/assets/blog-export-products.jpg";
@@ -18,26 +19,47 @@ interface BlogPost {
   tags: string[];
   image: string;
   status: "draft" | "published";
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const Blog = () => {
   const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [adminPosts, setAdminPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Load posts from localStorage (Admin panel)
+  // Load posts from Supabase
   useEffect(() => {
-    const saved = localStorage.getItem("blogPosts");
-    if (saved) {
-      const posts = JSON.parse(saved);
-      setAdminPosts(posts.filter((p: BlogPost) => p.status === "published"));
-    }
+    const fetchPosts = async () => {
+      if (isSupabaseConfigured && supabase) {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error("Error fetching posts:", error);
+        }
+
+        if (data) {
+          setPosts(data);
+        }
+      } else {
+        // Fallback to local storage for demo/dev without Supabase
+        const saved = localStorage.getItem("blogPosts");
+        if (saved) {
+          const localPosts = JSON.parse(saved);
+          setPosts(localPosts.filter((p: any) => p.status === "published"));
+        }
+      }
+    };
+
+    fetchPosts();
   }, []);
 
   const categories = [
@@ -49,25 +71,21 @@ const Blog = () => {
     { id: "How-To Guides", name: "How-To Guides" },
   ];
 
-  // Convert admin posts to display format
-  const allPosts = adminPosts.map(post => ({
+  // Convert posts to display format
+  const allPosts = posts.map(post => ({
     id: post.id,
     title: post.title,
     excerpt: post.content.slice(0, 150) + "...",
-    category: post.category.toLowerCase().replace(/ /g, ""),
+    category: post.category,
     author: "Competence Team",
-    date: post.createdAt,
+    date: post.created_at, // Use created_at from DB
     readTime: Math.ceil(post.content.split(" ").length / 200) + " min read",
     image: post.image || blogExportProducts,
   }));
 
   const filteredPosts = selectedCategory === "all"
     ? allPosts
-    : allPosts.filter(post => {
-        const postCategory = post.category.toLowerCase().replace(/ /g, "");
-        const selectedCat = selectedCategory.toLowerCase().replace(/ /g, "");
-        return postCategory === selectedCat || postCategory.includes(selectedCat) || selectedCat.includes(postCategory);
-      });
+    : allPosts.filter(post => post.category === selectedCategory);
 
   return (
     <div className="min-h-screen">
@@ -77,7 +95,7 @@ const Blog = () => {
           <img src={bannerFaq} alt="Blog banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <Badge className="mb-6 bg-accent hover:bg-accent/90 text-accent-foreground">

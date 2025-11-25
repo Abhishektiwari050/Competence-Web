@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import bannerContact from "@/assets/banner-contact.jpg";
 
 const Contact = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.hash) {
@@ -27,6 +28,33 @@ const Contact = () => {
     } else {
       window.scrollTo(0, 0);
     }
+
+    // Meta Pixel Code
+    const script = document.createElement('script');
+    script.innerHTML = `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1890141068251374');
+      fbq('track', 'PageView');
+    `;
+    document.head.appendChild(script);
+
+    const noscript = document.createElement('noscript');
+    noscript.innerHTML = `<img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1890141068251374&ev=PageView&noscript=1"
+    />`;
+    document.body.appendChild(noscript);
+
+    return () => {
+      document.head.removeChild(script);
+      document.body.removeChild(noscript);
+    };
   }, [location.pathname, location.hash]);
 
   const [formData, setFormData] = useState({
@@ -41,7 +69,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.email || !formData.phone || !formData.message) {
       toast({
         title: "Error",
@@ -50,7 +78,7 @@ const Contact = () => {
       });
       return;
     }
-    
+
     setIsSubmitting(true);
 
     try {
@@ -63,7 +91,7 @@ const Contact = () => {
       const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
       const { error } = await supabase
         .from('contact_messages')
-        .insert([{ 
+        .insert([{
           name: formData.name.trim(),
           email: formData.email.trim(),
           phone: formData.phone.trim(),
@@ -80,6 +108,7 @@ const Contact = () => {
         description: "We'll get back to you within 24 hours.",
       });
       setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+      navigate("/thank-you");
     } catch (err) {
       console.error('Contact submit error:', err);
       toast({ title: "Submission failed", description: "Please try again later.", variant: "destructive" });
@@ -96,7 +125,7 @@ const Contact = () => {
           <img src={bannerContact} alt="Contact banner" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <Badge className="mb-6 bg-accent hover:bg-accent/90 text-accent-foreground">
@@ -268,7 +297,7 @@ const Contact = () => {
             <h2 className="text-3xl font-bold text-primary mb-2">Visit Our Offices</h2>
             <p className="text-muted-foreground">Select a location to view on map</p>
           </div>
-          
+
           <Tabs defaultValue="delhi" className="max-w-6xl mx-auto">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
               <TabsTrigger value="delhi">Delhi NCR</TabsTrigger>

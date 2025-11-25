@@ -14,6 +14,7 @@ import BlogPost from "./pages/BlogPost";
 import FAQ from "./pages/FAQ";
 import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
+import ThankYou from "./pages/ThankYou";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Admin from "./pages/Admin";
@@ -39,10 +40,11 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/thank-you" element={<ThankYou />} />
               {/* Admin route - redirects to NotFound in production unless explicitly enabled */}
               <Route path="/admin" element={
-                (import.meta.env.DEV || import.meta.env.VITE_ENABLE_ADMIN === 'true') 
-                  ? <Admin /> 
+                (import.meta.env.DEV || import.meta.env.VITE_ENABLE_ADMIN === 'true')
+                  ? <Admin />
                   : <NotFound />
               } />
               <Route path="/privacy" element={<Privacy />} />

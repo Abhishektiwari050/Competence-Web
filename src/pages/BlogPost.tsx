@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft, Lock } from "lucide-react";
 import LeadCapturePopup from "@/components/LeadCapturePopup";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import blogDocumentation from "@/assets/blog-documentation.jpg";
 import blogAlibaba from "@/assets/blog-alibaba.jpg";
 import blogExportProducts from "@/assets/blog-export-products.jpg";
@@ -16,8 +17,8 @@ interface AdminBlogPost {
   tags: string[];
   image: string;
   status: "draft" | "published";
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const BlogPost = () => {
@@ -25,7 +26,7 @@ const BlogPost = () => {
   const location = useLocation();
   const [isContentUnlocked, setIsContentUnlocked] = useState(false);
   const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
-  const [adminPosts, setAdminPosts] = useState<AdminBlogPost[]>([]);
+  const [adminPost, setAdminPost] = useState<AdminBlogPost | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,18 +35,36 @@ const BlogPost = () => {
   useEffect(() => {
     // Check if content is already unlocked via cookie
     const cookies = document.cookie.split(';');
-    const hasUnlockedCookie = cookies.some(cookie => 
+    const hasUnlockedCookie = cookies.some(cookie =>
       cookie.trim().startsWith('contentUnlocked=true')
     );
     setIsContentUnlocked(hasUnlockedCookie);
 
-    // Load admin posts
-    const saved = localStorage.getItem("blogPosts");
-    if (saved) {
-      const posts = JSON.parse(saved);
-      setAdminPosts(posts.filter((p: AdminBlogPost) => p.status === "published"));
-    }
-  }, []);
+    // Load post from Supabase
+    const fetchPost = async () => {
+      if (isSupabaseConfigured && supabase && id) {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (!error && data) {
+          setAdminPost(data);
+        }
+      } else {
+        // Fallback to local storage
+        const saved = localStorage.getItem("blogPosts");
+        if (saved) {
+          const posts = JSON.parse(saved);
+          const found = posts.find((p: any) => p.id === id);
+          if (found) setAdminPost(found);
+        }
+      }
+    };
+
+    fetchPost();
+  }, [id]);
 
   const blogPosts = [
     {
@@ -778,7 +797,7 @@ Proper documentation is the backbone of successful export operations. While the 
   };
 
   let post: DisplayPost | undefined;
-  const adminPost = adminPosts.find(p => p.id === id);
+
   if (adminPost) {
     post = {
       id: adminPost.id,
@@ -786,7 +805,7 @@ Proper documentation is the backbone of successful export operations. While the 
       content: adminPost.content,
       category: adminPost.category,
       author: "Admin",
-      date: adminPost.createdAt,
+      date: adminPost.created_at,
       readTime: Math.ceil(adminPost.content.split(" ").length / 200) + " min read",
       image: adminPost.image || blogExportProducts,
       excerpt: adminPost.content.slice(0, 150) + "...",
@@ -902,7 +921,7 @@ Proper documentation is the backbone of successful export operations. While the 
           <img src={post.image} alt="" className="w-full h-full object-cover opacity-20" />
         </div>
         <div className="absolute inset-0 bg-primary/80" />
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
             <Button asChild variant="ghost" className="mb-6 text-primary-foreground hover:text-accent hover:bg-primary-foreground/10">
@@ -911,15 +930,15 @@ Proper documentation is the backbone of successful export operations. While the 
                 Back to Blog
               </Link>
             </Button>
-            
+
             <Badge className="mb-4 bg-accent text-accent-foreground">
               {post.category}
             </Badge>
-            
+
             <h1 className="text-3xl md:text-5xl font-bold mb-6 animate-fade-in-up">
               {post.title}
             </h1>
-            
+
             <div className="flex flex-wrap items-center gap-6 text-primary-foreground/80 animate-fade-in-up animation-delay-200">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
@@ -961,27 +980,27 @@ Proper documentation is the backbone of successful export operations. While the 
                 <div className="relative mt-8">
                   {/* Gradient Fade */}
                   <div className="absolute -top-32 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-                  
+
                   {/* Lock Card */}
                   <div className="bg-gradient-to-br from-accent/10 to-primary/10 border-2 border-accent/20 rounded-xl p-8 md:p-12 text-center relative overflow-hidden">
                     <div className="absolute inset-0 opacity-10">
                       <div className="absolute top-0 left-0 w-64 h-64 bg-accent rounded-full blur-3xl" />
                       <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl" />
                     </div>
-                    
+
                     <div className="relative z-10">
                       <div className="inline-flex items-center justify-center w-20 h-20 bg-accent/20 rounded-full mb-6 animate-bounce-in">
                         <Lock className="h-10 w-10 text-accent" />
                       </div>
-                      
+
                       <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
                         Unlock Full Guide
                       </h3>
-                      
+
                       <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                         Get instant access to the complete {post.readTime} guide with detailed insights, expert tips, and actionable strategies. Plus, receive exclusive export resources directly to your inbox!
                       </p>
-                      
+
                       <Button
                         onClick={() => setIsLeadPopupOpen(true)}
                         size="lg"
@@ -990,7 +1009,7 @@ Proper documentation is the backbone of successful export operations. While the 
                         Unlock Now - It's Free!
                         <ArrowLeft className="ml-2 h-5 w-5 rotate-180" />
                       </Button>
-                      
+
                       <p className="text-sm text-muted-foreground mt-6">
                         No credit card required • Instant access • 100% free
                       </p>
